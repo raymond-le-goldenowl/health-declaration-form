@@ -4,8 +4,11 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
 
+import AppBar from 'app/components/AppBar';
+
 ReactDOM.render(
 	<React.StrictMode>
+		<AppBar />
 		<h1>Hello World</h1>
 	</React.StrictMode>,
 	document.getElementById('root')
