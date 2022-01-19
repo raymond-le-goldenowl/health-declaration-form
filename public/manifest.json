@@ -1,0 +1,8 @@
+{
+  "short_name": "HDF",
+  "name": "Health declaration form",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
