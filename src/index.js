@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+
 import * as serviceWorker from './serviceWorker';
+
+import SelectOption from 'app/components/SelectOption';
+import './index.css';
 import 'antd/dist/antd.css';
 
 ReactDOM.render(
 	<React.StrictMode>
 		<h1>Hello World</h1>
+		<SelectOption />
 	</React.StrictMode>,
 	document.getElementById('root')
 );

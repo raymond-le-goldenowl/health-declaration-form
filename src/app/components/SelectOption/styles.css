@@ -1,0 +1,47 @@
+#select_option-custom {
+	position: relative;
+}
+#select_option-custom .ant-select-arrow .anticon.anticon-down.ant-select-suffix {
+	display: none;
+}
+
+#select_option-custom .ant-select-arrow .anticon.anticon-search.ant-select-suffix {
+	display: none;
+}
+
+#select_option-custom
+	.ant-select-show-search.ant-select:not(.ant-select-customize-input)
+	.ant-select-selector {
+	border-radius: 5px;
+}
+
+#select_option-custom .pos-anticon-search {
+	color: inherit;
+	font-style: normal;
+	line-height: 0;
+	text-align: center;
+	text-transform: none;
+	vertical-align: -0.125em;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	transform-origin: center center;
+	transform-style: preserve-3D;
+	transform: rotate(0);
+	transition: all 0.3s;
+
+	position: absolute;
+	left: 180px;
+	top: 35%;
+}
+
+#select_option-custom .pos-anticon-search svg {
+	width: 12px;
+	height: 12px;
+	color: rgba(0, 0, 0, 0.25);
+}
+
+#select_option-custom .animate-anticon-search {
+	transform: rotate(-180deg);
+}
