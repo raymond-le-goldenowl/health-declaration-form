@@ -1,10 +1,10 @@
-import React from 'react'
-import { ClockCircleOutlined, FileAddOutlined, MenuOutlined } from '@ant-design/icons/lib/icons'
-import { Dropdown, Menu } from 'antd'
+import React from 'react';
+import { ClockCircleOutlined, FileAddOutlined, MenuOutlined } from '@ant-design/icons/lib/icons';
+import { Dropdown, Menu } from 'antd';
 
-import imageLogoBoYTe from '../../assets/imageLogoBoYTe.png'
-import textLogoBoYTe from '../../assets/textLogoBoYTe.png'
-import './styles.css'
+import imageLogoBoYTe from '../../assets/imageLogoBoYTe.png';
+import textLogoBoYTe from '../../assets/textLogoBoYTe.png';
+import './styles.css';
 
 export default function AppBar() {
 	return (
@@ -49,5 +49,5 @@ export default function AppBar() {
 				</div>
 			</div>
 		</div>
-	)
+	);
 }
