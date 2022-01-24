@@ -4,13 +4,31 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 
 import SelectOption from 'app/components/SelectOption';
-import './index.css';
+
 import 'antd/dist/antd.css';
+import './index.css';
+
+// demo data
+const options = [
+	{ key: 1, value: 1, text: 'Text 1' },
+	{ key: 2, value: 2, text: 'Text 2' },
+	{ key: 3, value: 3, text: 'Text 3' },
+	{ key: 4, value: 4, text: 'Text 4' },
+	{ key: 5, value: 5, text: 'Text 5' },
+	{ key: 6, value: 6, text: 'Text 6' }
+];
 
 ReactDOM.render(
 	<React.StrictMode>
 		<h1>Hello World</h1>
-		<SelectOption />
+
+		{/* demo render custom */}
+		<SelectOption
+			options={options}
+			width={'50%'}
+			placeholder={'Select option'}
+			defaultValue={'1'}
+		/>
 	</React.StrictMode>,
 	document.getElementById('root')
 );
