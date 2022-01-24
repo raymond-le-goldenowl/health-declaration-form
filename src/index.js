@@ -4,9 +4,13 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
 
+import DatePickerCustom from 'app/components/DatePickerCustom';
+
 ReactDOM.render(
 	<React.StrictMode>
 		<h1>Hello World</h1>
+
+		<DatePickerCustom />
 	</React.StrictMode>,
 	document.getElementById('root')
 );
