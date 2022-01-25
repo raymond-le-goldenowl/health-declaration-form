@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
+import { notificationCustom } from 'app/utils/notificationCustom';
+
+notificationCustom({ description: '  ', type: 'success' });
 
 ReactDOM.render(
 	<React.StrictMode>

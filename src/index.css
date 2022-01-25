@@ -9,3 +9,51 @@ body {
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+/* ERROR CUSTOM */
+.notification-custom.ant-notification-notice-closable {
+	margin: 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 5px 20px;
+}
+
+.notification-custom.ant-notification-notice-error.ant-notification-notice-closable {
+	background-color: #fbcfd6;
+}
+
+/* notice content */
+.notification-custom.ant-notification-notice-closable .ant-notification-notice-message {
+	margin-left: 0;
+	font-weight: 500;
+	color: #7d2c38;
+	margin: 0;
+}
+
+/* hide default icon */
+.notification-custom .anticon.ant-notification-notice-icon {
+	display: none;
+}
+
+/* icon close notification*/
+.notification-custom.ant-notification-notice-closable .ant-notification-notice-close::before {
+	content: '×';
+	font-size: 2em;
+}
+
+.notification-custom.ant-notification-notice-closable .ant-notification-notice-close {
+	position: relative;
+	inset: 0;
+	display: inline-block;
+}
+
+/* hide x icon */
+.notification-custom.ant-notification-notice-closable .ant-notification-notice-close svg {
+	display: none;
+}
+
+/* ant-notification-notice-description */
+.notification-custom .ant-notification-notice-with-icon .ant-notification-notice-description {
+	margin: 0 10px 0 0;
+}
