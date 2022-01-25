@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import * as serviceWorker from './serviceWorker';
-import 'antd/dist/antd.css';
 
 import DatePickerCustom from 'app/components/DatePickerCustom';
+
+import './index.css';
+import 'antd/dist/antd.css';
 
 ReactDOM.render(
 	<React.StrictMode>

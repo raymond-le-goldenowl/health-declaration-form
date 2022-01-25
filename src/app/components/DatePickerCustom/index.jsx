@@ -1,18 +1,33 @@
 import React from 'react';
 
+import moment from 'moment';
 import viVN from 'antd/lib/locale/vi_VN';
 import { DatePicker, ConfigProvider } from 'antd';
-import moment from 'moment';
 
+import { DATE_FORMAT, MONTHS, WEEKS } from './constants';
+import './styles.css';
+
+// custom local days on a week and months on a year.
 moment.updateLocale('vn', {
-	weekdaysMin: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
+	weekdaysMin: WEEKS,
+	monthsShort: MONTHS
 });
 
-export default function DatePickerCustom() {
-	const dateFormat = 'DD/MM/YYYY';
+export default function DatePickerCustom({ defaultDateTime, getValueSelected }) {
+	const handleOnchange = value => getValueSelected(moment(value).format(DATE_FORMAT));
+
 	return (
 		<ConfigProvider locale={viVN}>
-			<DatePicker defaultValue={moment('24/01/2022', dateFormat)} format={dateFormat} />
+			<DatePicker
+				className='date-picker-custom'
+				defaultValue={
+					defaultDateTime
+						? moment(defaultDateTime, DATE_FORMAT)
+						: moment(moment(moment()._d).format(DATE_FORMAT), DATE_FORMAT)
+				}
+				format={DATE_FORMAT}
+				onChange={handleOnchange}
+			/>
 		</ConfigProvider>
 	);
 }
