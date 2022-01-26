@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
-import { notificationCustom } from 'app/utils/notificationCustom';
 
-notificationCustom({ description: '  ', type: 'success' });
+import AppBar from 'app/components/AppBar';
+import './index.css';
+
+import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
 	<React.StrictMode>
+		<AppBar />
 		<h1>Hello World</h1>
 	</React.StrictMode>,
 	document.getElementById('root')
