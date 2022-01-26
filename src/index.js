@@ -6,9 +6,12 @@ import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
 import './index.css';
 
+import Footer from './app/components/Footer';
+
 ReactDOM.render(
 	<React.StrictMode>
 		<h1>Hello World</h1>
+		<Footer />
 	</React.StrictMode>,
 	document.getElementById('root')
 );
