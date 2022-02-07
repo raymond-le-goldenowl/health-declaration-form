@@ -35,7 +35,7 @@ export default function SelectOption({
 				filterSort={(optionA, optionB) =>
 					optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
 				}
-				defaultValue={defaultValue}
+				defaultValue={defaultValue || null}
 			>
 				{options &&
 					options.map(option => (
