@@ -10,7 +10,8 @@ export default function SelectOption({
 	getValueSelected,
 	width,
 	placeholder,
-	defaultValue = ''
+	defaultValue = '',
+	disabled = false
 }) {
 	const [isArrowUp, setIsArrowUp] = useState(false);
 
@@ -36,6 +37,7 @@ export default function SelectOption({
 					optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
 				}
 				defaultValue={defaultValue || null}
+				disabled={disabled}
 			>
 				{options &&
 					options.map(option => (
