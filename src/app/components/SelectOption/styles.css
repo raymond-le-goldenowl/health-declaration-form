@@ -99,3 +99,17 @@ span.anticon.anticon-search.ant-select-suffix.pos-anticon-search {
 	color: #6c757d !important;
 	font-weight: none;
 }
+
+/* Styles for Select Options are Disabled */
+.select_option-custom
+	.ant-select-disabled.ant-select-show-search.ant-select:not(.ant-select-customize-input)
+	.ant-select-selector {
+	background-color: #fff;
+	color: #bfbfbf;
+	border-color: #bfbfbf;
+	opacity: 0.5;
+}
+
+.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector input {
+	cursor: default;
+}
