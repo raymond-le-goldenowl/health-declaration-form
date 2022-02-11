@@ -94,6 +94,9 @@
 	border-radius: 0.25rem;
 }
 
+.btn-reset-data span.anticon-sync {
+  margin-right: 8px;
+}
 @media screen and (max-width: 690px) {
 	#form-container .list-types-declaration {
 		flex-direction: column;
