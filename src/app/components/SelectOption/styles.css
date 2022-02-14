@@ -91,11 +91,9 @@ span.anticon.anticon-search.ant-select-suffix.pos-anticon-search {
 
 .rc-virtual-list .ant-select-item-option-content {
 	color: #6c757d;
-	font-weight: none;
 }
 
 .ant-select-item.ant-select-item-option.ant-select-item-option-selected
 	.ant-select-item-option-content {
 	color: #6c757d !important;
-	font-weight: none;
 }
