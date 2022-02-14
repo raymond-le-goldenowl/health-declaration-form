@@ -25,6 +25,7 @@ export default function DeclarationForm() {
 	const [wards, setWards] = useState([]);
 	const [declarationPlaces, setDeclarationPlaces] = useState([]);
 	const [captchaText, setCaptchaText] = useState(null);
+	const [declarationTypesState, setDeclarationTypesState] = useState(() => declarationTypes || []);
 
 	const codeRef = useRef();
 
@@ -101,6 +102,18 @@ export default function DeclarationForm() {
 		}
 	}, [districtSelected]);
 
+	const onDeclarationTypeChange = event => {
+		const targetValue = event.target.value;
+		setDeclarationTypesState(() => {
+			return declarationTypes.map(dt => {
+				if (targetValue !== dt.value) {
+					return { ...dt, checked: false };
+				}
+				return { ...dt, checked: true };
+			});
+		});
+	};
+
 	return (
 		<div id='declaration-form'>
 			<h2 className='title-blue'>SỞ Y TẾ TP. HỒ CHÍ MINH</h2>
@@ -111,10 +124,16 @@ export default function DeclarationForm() {
 			<form id='form-container'>
 				<div className='list-types-declaration'>
 					<div className='list-types-declaration-list-radios'>
-						{declarationTypes.map(declarationType => {
+						{declarationTypesState.map(declarationType => {
 							return (
-								<label key={declarationType.key}>
-									<input type='radio' name='declaration-type' value={declarationType.value} />
+								<label key={declarationType?.id}>
+									<input
+										type='radio'
+										name='declaration-type'
+										defaultValue={declarationType?.value || ''}
+										onChange={onDeclarationTypeChange}
+										checked={declarationType?.checked ?? false}
+									/>
 									<span className='declaration-type-bold'>{declarationType.text}</span>
 								</label>
 							);
