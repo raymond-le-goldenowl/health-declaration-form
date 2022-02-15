@@ -5,7 +5,7 @@ import { Col, Input, Row } from 'antd';
 import { SyncOutlined } from '@ant-design/icons/lib/icons';
 
 import { declarationTypes } from 'app/services';
-
+import { notificationCustom } from 'app/utils/notificationCustom';
 import Footer from 'app/components/Footer';
 import SelectOption from 'app/components/SelectOption';
 import DatePickerCustom from 'app/components/DatePickerCustom';
@@ -170,40 +170,29 @@ export default function DeclarationForm() {
 			xaPhuong: JSON.parse(xaPhuong)
 		};
 
-		console.log(saveValue);
+		if (saveValue.diaChi) {
+			notificationCustom({ type: 'warning', message: 'Chưa nhập địa chỉ.' });
+		} else if (saveValue.gioiTinh) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn giới tính.' });
+		} else if (saveValue.namSinh) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn năm sinh.' });
+		} else if (saveValue.quanHuyen) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn quận huyện.' });
+		} else if (saveValue.soDienThoai) {
+			notificationCustom({ type: 'warning', message: 'Chưa nhập số điện thoại.' });
+		} else if (saveValue.ten) {
+			notificationCustom({ type: 'warning', message: 'Chưa nhập tên.' });
+		} else if (saveValue.tinhThanh) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn tỉnh thành.' });
+		} else if (saveValue.xaPhuong) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn xã phường.' });
+		} else {
+			console.log(saveValue);
+			localStorage.setItem('info', JSON.stringify(saveValue));
+			localStorage.setItem(saveValue.soDienThoai, saveValue);
+		}
 	};
 
-	/**
-	 * * dia_chi: "Kiểm tra ứng dụng"
-	 * * gioi_tinh: 1
-	 * * khoa_phong: null
-	 * * ma_benh_nhan: null
-	 * * ma_sinh_vien: "090989889"
-	 * * namsinh: 2001
-	 * * ngaysinh: 987786000
-	 * * noi_tru: 0
-	 * * quanhuyen:
-	 *    id: "76798f84-855d-46d6-b4a5-18b4576545e6"
-	 *    ma: "560"
-	 *    ten: "Huyện Sơn Hòa"
-	 *    tinhthanh_id: "a76fadc8-3f54-4348-ad8b-27750750ac2f"
-	 * * quanhuyen_id: "76798f84-855d-46d6-b4a5-18b4576545e6"
-	 * * quoctich_id: "ada8ecb6-9089-459d-a403-53125fa6e51c"
-	 * * so_dien_thoai: "0333123456"
-	 * * ten: "Lê Anh vũ"
-	 * * tinhthanh:
-	 *     id: "a76fadc8-3f54-4348-ad8b-27750750ac2f"
-	 *     ma: "54"
-	 *     quocgia_id: "ada8ecb6-9089-459d-a403-53125fa6e51c"
-	 *     ten: "Tỉnh Phú Yên"
-	 * * tinhthanh_id: "a76fadc8-3f54-4348-ad8b-27750750ac2f"
-	 * * xaphuong:
-	 *     id: "ec455a39-d931-4ec8-ba5b-19c4adefc4b6"
-	 *     ma: "22189"
-	 *     quanhuyen_id: "76798f84-855d-46d6-b4a5-18b4576545e6"
-	 *     ten: "Xã Sơn Nguyên"
-	 * * xaphuong_id: "ec455a39-d931-4ec8-ba5b-19c4adefc4b6"
-	 */
 	return (
 		<div id='declaration-form'>
 			<h2 className='title-blue'>SỞ Y TẾ TP. HỒ CHÍ MINH</h2>
@@ -640,7 +629,7 @@ export default function DeclarationForm() {
 										<input type='radio' name={diseaseSymptom.id} />
 									</td>
 									<td>
-										<input type='radio' name={diseaseSymptom.id} />
+										<input defaultChecked type='radio' name={diseaseSymptom.id} />
 									</td>
 								</tr>
 							))}
@@ -671,7 +660,7 @@ export default function DeclarationForm() {
 										<input type='radio' name={epidemiologicalFactor.id} />
 									</td>
 									<td>
-										<input type='radio' name={epidemiologicalFactor.id} />
+										<input defaultChecked type='radio' name={epidemiologicalFactor.id} />
 									</td>
 								</tr>
 							))}
