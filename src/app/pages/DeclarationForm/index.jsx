@@ -32,6 +32,21 @@ export default function DeclarationForm() {
 	const [isUsedMolnupiravir, setIsUsedMolnupiravir] = useState('no');
 	const codeRef = useRef();
 
+	const [diaChi, setDiaChi] = useState(null);
+	const [gioiTinh, setGioiTinh] = useState('Nam');
+	const [khoaPhong, setKhoaPhong] = useState(null);
+	const [maBenhNhan, setMaBenhNhan] = useState(null);
+	const [maSinhVien, setMaSinhVien] = useState(null);
+	const [namSinh, setNamSinh] = useState(null);
+	// const [ngaySinh, setNgaySinh] = useState(null);
+	const [noiTru, setNoiTru] = useState(0);
+	// const [quanHuyen, setQuanHuyen] = useState({}); // disStrict
+	const [quocTichID, setQuocTichID] = useState(null);
+	const [soDienThoai, setSoDienThoai] = useState(null);
+	const [ten, setTen] = useState(null);
+	// const [tinhThanh, setTinh] = useState({}); // province
+	const [xaPhuong, setXaPhuong] = useState({});
+
 	useEffect(() => {
 		const diseaseSymptomsUrl = `https://kbyt.khambenh.gov.vn/api/v1/trieuchung?q={%22filters%22:{%22$and%22:[{%22trangthai%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22thutu_uutien%22,%22direction%22:%22asc%22}]}`;
 		const epidemiologicalFactorsUrl = `https://kbyt.khambenh.gov.vn/api/v1/dichte?q={%22filters%22:{%22$and%22:[{%22trangthai%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22thutu_uutien%22,%22direction%22:%22asc%22}]}`;
@@ -137,6 +152,58 @@ export default function DeclarationForm() {
 		});
 	};
 
+	const handleDeclarationFormSubmit = event => {
+		event.preventDefault();
+		const saveValue = {
+			diaChi: diaChi,
+			gioiTinh: gioiTinh,
+			khoaPhong: khoaPhong,
+			maBenhNhan: maBenhNhan,
+			maSinhVien: maSinhVien,
+			namSinh: namSinh,
+			noiTru: noiTru,
+			quanHuyen: JSON.parse(districtSelected),
+			quocTichID: quocTichID,
+			soDienThoai: soDienThoai,
+			ten: ten,
+			tinhThanh: JSON.parse(provinceSelected),
+			xaPhuong: JSON.parse(xaPhuong)
+		};
+
+		console.log(saveValue);
+	};
+
+	/**
+	 * * dia_chi: "Kiểm tra ứng dụng"
+	 * * gioi_tinh: 1
+	 * * khoa_phong: null
+	 * * ma_benh_nhan: null
+	 * * ma_sinh_vien: "090989889"
+	 * * namsinh: 2001
+	 * * ngaysinh: 987786000
+	 * * noi_tru: 0
+	 * * quanhuyen:
+	 *    id: "76798f84-855d-46d6-b4a5-18b4576545e6"
+	 *    ma: "560"
+	 *    ten: "Huyện Sơn Hòa"
+	 *    tinhthanh_id: "a76fadc8-3f54-4348-ad8b-27750750ac2f"
+	 * * quanhuyen_id: "76798f84-855d-46d6-b4a5-18b4576545e6"
+	 * * quoctich_id: "ada8ecb6-9089-459d-a403-53125fa6e51c"
+	 * * so_dien_thoai: "0333123456"
+	 * * ten: "Lê Anh vũ"
+	 * * tinhthanh:
+	 *     id: "a76fadc8-3f54-4348-ad8b-27750750ac2f"
+	 *     ma: "54"
+	 *     quocgia_id: "ada8ecb6-9089-459d-a403-53125fa6e51c"
+	 *     ten: "Tỉnh Phú Yên"
+	 * * tinhthanh_id: "a76fadc8-3f54-4348-ad8b-27750750ac2f"
+	 * * xaphuong:
+	 *     id: "ec455a39-d931-4ec8-ba5b-19c4adefc4b6"
+	 *     ma: "22189"
+	 *     quanhuyen_id: "76798f84-855d-46d6-b4a5-18b4576545e6"
+	 *     ten: "Xã Sơn Nguyên"
+	 * * xaphuong_id: "ec455a39-d931-4ec8-ba5b-19c4adefc4b6"
+	 */
 	return (
 		<div id='declaration-form'>
 			<h2 className='title-blue'>SỞ Y TẾ TP. HỒ CHÍ MINH</h2>
@@ -144,7 +211,7 @@ export default function DeclarationForm() {
 				KHAI BÁO THÔNG TIN SAI LÀ VI PHẠM PHÁP LUẬT VIỆT NAM VÀ CÓ THỂ XỬ LÝ HÌNH SỰ
 			</h3>
 
-			<form id='form-container'>
+			<form id='form-container' onSubmit={handleDeclarationFormSubmit}>
 				<div className='list-types-declaration'>
 					<div className='list-types-declaration-list-radios'>
 						{declarationTypesState.map(declarationType => {
@@ -188,7 +255,11 @@ export default function DeclarationForm() {
 						<span>
 							Số điện thoại <span className='label-red'> (*)</span>:
 						</span>
-						<Input type='number' />
+						<Input
+							type='number'
+							value={soDienThoai}
+							onChange={({ target }) => setSoDienThoai(target.value)}
+						/>
 					</label>
 				</div>
 
@@ -196,7 +267,12 @@ export default function DeclarationForm() {
 					<span>
 						Họ và tên <span className='label-red'> (*)</span>:
 					</span>
-					<Input type='text' placeholder='Họ và tên' />
+					<Input
+						type='text'
+						placeholder='Họ và tên'
+						value={ten}
+						onChange={({ target }) => setTen(target.value)}
+					/>
 				</label>
 				<Row gutter={16}>
 					<Col className='gutter-row' span={12}>
@@ -204,7 +280,7 @@ export default function DeclarationForm() {
 							<span>
 								Ngày sinh <span className='label-red'> (*)</span>:
 							</span>
-							<DatePickerCustom />
+							<DatePickerCustom getValueSelected={setNamSinh} />
 						</label>
 					</Col>
 
@@ -213,7 +289,11 @@ export default function DeclarationForm() {
 							<span>
 								Giới tính <span className='label-red'> (*)</span>:
 							</span>
-							<Input type='text' value={'Nam'} />
+							<Input
+								type='text'
+								value={gioiTinh}
+								onChange={({ target }) => setGioiTinh(target.value)}
+							/>
 						</label>
 					</Col>
 				</Row>
@@ -223,12 +303,22 @@ export default function DeclarationForm() {
 					<>
 						<label>
 							<span>Mã nhân viên:</span>
-							<Input type='number' placeholder='Mã nhân viên' />
+							<Input
+								type='number'
+								placeholder='Mã nhân viên'
+								value={maBenhNhan}
+								onChange={({ target }) => setMaBenhNhan(target.value)}
+							/>
 						</label>
 
 						<label>
 							<span>Khoa/phòng:</span>
-							<Input type='text' placeholder='Khoa/phòng' />
+							<Input
+								type='text'
+								placeholder='Khoa/phòng'
+								value={khoaPhong}
+								onChange={({ target }) => setKhoaPhong(target.value)}
+							/>
 						</label>
 					</>
 				) : null}
@@ -245,7 +335,12 @@ export default function DeclarationForm() {
 							<span>
 								Quốc tịch <span className='label-red'> (*)</span>:
 							</span>
-							<SelectOption width={'100'} options={nations} defaultValue={'Việt Nam'} />
+							<SelectOption
+								width={'100'}
+								options={nations}
+								defaultValue={'Việt Nam'}
+								getValueSelected={setQuocTichID}
+							/>
 						</label>
 					</Col>
 					<Col
@@ -303,6 +398,7 @@ export default function DeclarationForm() {
 								placeholder={'Xã phường'}
 								width={'100'}
 								options={wards}
+								getValueSelected={setXaPhuong}
 							/>
 						</label>
 					</Col>
@@ -312,7 +408,12 @@ export default function DeclarationForm() {
 					<span>
 						Số nhà, tên đường <span className='label-red'> (*)</span>:
 					</span>
-					<Input type='text' placeholder='Số nhà, tên đường' />
+					<Input
+						type='text'
+						placeholder='Số nhà, tên đường'
+						value={diaChi}
+						onChange={({ target }) => setDiaChi(target.value)}
+					/>
 				</label>
 
 				{/* display if type is 'Tiêm chủng vắc xin' hoặc 'Xét nghiệm Covid-19 */}
@@ -326,7 +427,12 @@ export default function DeclarationForm() {
 							) : null}
 							:
 						</span>
-						<Input type='text' placeholder='Nhập chính xác CMND/CCCD' />
+						<Input
+							type='text'
+							placeholder='Nhập chính xác CMND/CCCD'
+							value={maSinhVien}
+							onChange={({ target }) => setMaSinhVien(target.value)}
+						/>
 					</label>
 				) : null}
 				{/* display if type is 'Xét nghiệm Covid-19' */}
