@@ -26,7 +26,10 @@ export default function DeclarationForm() {
 	const [declarationPlaces, setDeclarationPlaces] = useState([]);
 	const [captchaText, setCaptchaText] = useState(null);
 	const [declarationTypesState, setDeclarationTypesState] = useState(() => declarationTypes || []);
-
+	const [displayType, setDisplayType] = useState(undefined);
+	const [typeOfTestObject, setTypeOfTestObject] = useState('no');
+	const [backgroundDisease, setBackgroundDisease] = useState('no');
+	const [isUsedMolnupiravir, setIsUsedMolnupiravir] = useState('no');
 	const codeRef = useRef();
 
 	useEffect(() => {
@@ -34,7 +37,6 @@ export default function DeclarationForm() {
 		const epidemiologicalFactorsUrl = `https://kbyt.khambenh.gov.vn/api/v1/dichte?q={%22filters%22:{%22$and%22:[{%22trangthai%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22thutu_uutien%22,%22direction%22:%22asc%22}]}`;
 		const nationUrl = `https://kbyt.khambenh.gov.vn/api/v1/quocgia?results_per_page=1000&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
 		const provincesUrl = `https://kbyt.khambenh.gov.vn/api/v1/tinhthanh?results_per_page=100&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
-		const declarationPlacesUrl = `https://kbyt.khambenh.gov.vn/api/v1/donvi_filter?page=1&results_per_page=25&q={%22filters%22:{%22$and%22:[{%22tuyendonvi_id%22:{%22$neq%22:%227%22}},{%22active%22:{%22$eq%22:true}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
 
 		axios.get(diseaseSymptomsUrl).then(resp => setDiseaseSymptoms(resp.data?.objects || []));
 		axios
@@ -57,15 +59,6 @@ export default function DeclarationForm() {
 				text: province.ten
 			}));
 			setProvinces(data);
-		});
-		axios.get(declarationPlacesUrl).then(resp => {
-			const data = resp.data?.objects.map(province => ({
-				id: province.id,
-				key: province.id,
-				value: province.ten,
-				text: province.ten
-			}));
-			setDeclarationPlaces(data);
 		});
 	}, []);
 
@@ -102,6 +95,34 @@ export default function DeclarationForm() {
 		}
 	}, [districtSelected]);
 
+	useEffect(() => {
+		if (displayType === declarationTypes[3].value) {
+			const declarationPlacesUrl = `https://kbyt.khambenh.gov.vn/api/v1/donvi_filter?page=1&results_per_page=25&q={%22filters%22:{%22$and%22:[{%22tuyendonvi_id%22:{%22$neq%22:%227%22}},{%22active%22:{%22$eq%22:true}},{%22tiemchung_vacxin%22:{%22$eq%22:true}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
+
+			axios.get(declarationPlacesUrl).then(resp => {
+				const data = resp.data?.objects.map(province => ({
+					id: province.id,
+					key: province.id,
+					value: province.ten,
+					text: province.ten
+				}));
+				setDeclarationPlaces(data);
+			});
+		} else {
+			const declarationPlacesUrl = `https://kbyt.khambenh.gov.vn/api/v1/donvi_filter?page=1&results_per_page=25&q={%22filters%22:{%22$and%22:[{%22tuyendonvi_id%22:{%22$neq%22:%227%22}},{%22active%22:{%22$eq%22:true}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
+
+			axios.get(declarationPlacesUrl).then(resp => {
+				const data = resp.data?.objects.map(province => ({
+					id: province.id,
+					key: province.id,
+					value: province.ten,
+					text: province.ten
+				}));
+				setDeclarationPlaces(data);
+			});
+		}
+	}, [displayType]);
+
 	const onDeclarationTypeChange = event => {
 		const targetValue = event.target.value;
 		setDeclarationTypesState(() => {
@@ -109,6 +130,8 @@ export default function DeclarationForm() {
 				if (targetValue !== dt.value) {
 					return { ...dt, checked: false };
 				}
+
+				setDisplayType(dt.value);
 				return { ...dt, checked: true };
 			});
 		});
@@ -194,6 +217,22 @@ export default function DeclarationForm() {
 						</label>
 					</Col>
 				</Row>
+
+				{/* display if type is 'Nhân viên bệnh viện' */}
+				{displayType && displayType === declarationTypes[1].value ? (
+					<>
+						<label>
+							<span>Mã nhân viên:</span>
+							<Input type='number' placeholder='Mã nhân viên' />
+						</label>
+
+						<label>
+							<span>Khoa/phòng:</span>
+							<Input type='text' placeholder='Khoa/phòng' />
+						</label>
+					</>
+				) : null}
+
 				<Row gutter={16}>
 					<Col
 						className='gutter-row'
@@ -276,6 +315,201 @@ export default function DeclarationForm() {
 					<Input type='text' placeholder='Số nhà, tên đường' />
 				</label>
 
+				{/* display if type is 'Tiêm chủng vắc xin' hoặc 'Xét nghiệm Covid-19 */}
+				{displayType &&
+				(displayType === declarationTypes[3].value || displayType === declarationTypes[4].value) ? (
+					<label>
+						<span>
+							CMND/CCCD
+							{displayType === declarationTypes[4].value ? (
+								<span className='label-red'> (*)</span>
+							) : null}
+							:
+						</span>
+						<Input type='text' placeholder='Nhập chính xác CMND/CCCD' />
+					</label>
+				) : null}
+				{/* display if type is 'Xét nghiệm Covid-19' */}
+				{displayType &&
+				(displayType === declarationTypes[4].value || displayType === declarationTypes[5].value) ? (
+					<>
+						<p className='type-of-test-object-title'>
+							Ông/Bà hiện có mắc Covid-19 hoặc các trường hợp theo dõi sau đây không?:
+						</p>
+						<div className='type-of-test-object'>
+							<label>
+								<input
+									type='radio'
+									name='type-of-test-object'
+									onChange={() => setTypeOfTestObject('no')}
+								/>
+								<span>Không</span>
+							</label>
+
+							<label>
+								<input
+									type='radio'
+									name='type-of-test-object'
+									onChange={() => setTypeOfTestObject('yes')}
+								/>
+								<span>Có</span>
+							</label>
+
+							<label>
+								<input
+									type='radio'
+									name='type-of-test-object'
+									onChange={() => setTypeOfTestObject('F1')}
+								/>
+								<span>F1</span>
+							</label>
+						</div>
+					</>
+				) : null}
+
+				{typeOfTestObject === 'yes' ? (
+					<>
+						<p className='place-of-test-object-title'>Nơi xét nghiệm:</p>
+						<div className='place-of-test-object'>
+							<label>
+								<input type='radio' name='place-of-test-object' />
+								<span>Bệnh viện</span>
+							</label>
+							<label>
+								<input type='radio' name='place-of-test-object' />
+								<span>Phòng khám tư nhâm</span>
+							</label>
+							<label>
+								<input type='radio' name='place-of-test-object' />
+								<span>Khu phong tỏa</span>
+							</label>
+							<label>
+								<input type='radio' name='place-of-test-object' />
+								<span>Tự làm xét nghiệm tại nhà</span>
+							</label>
+						</div>
+					</>
+				) : null}
+
+				{displayType && displayType === declarationTypes[5].value ? (
+					<>
+						<p className='background-disease-title'>Ông/Bà có mắc bệnh nền hay không?:</p>
+						<div className='background-disease'>
+							<label>
+								<input
+									type='radio'
+									name='background-disease'
+									onChange={() => setBackgroundDisease('no')}
+								/>
+								<span>Không</span>
+							</label>
+
+							<label>
+								<input
+									type='radio'
+									name='background-disease'
+									onChange={() => setBackgroundDisease('yes')}
+								/>
+								<span>Có</span>
+							</label>
+						</div>
+					</>
+				) : null}
+				{backgroundDisease && backgroundDisease === 'yes' ? (
+					<>
+						<p className='type-of-background-disease-title'>Chọn bệnh nền: </p>
+						<div className='type-of-background-disease'>
+							<label>
+								<input type='checkbox' />
+								<span>Thận mạn tính</span>
+							</label>
+							<label>
+								<input type='checkbox' />
+								<span>Tăng huyết áp</span>
+							</label>
+							<label>
+								<input type='checkbox' />
+								<span>Đái tháo đường</span>
+							</label>
+							<label>
+								<input type='checkbox' />
+								<span>Bệnh phổi tắc nghẽn mạn tính</span>
+							</label>
+							<label>
+								<input type='checkbox' />
+								<span>Có tình trạng béo phì</span>
+							</label>
+						</div>
+					</>
+				) : null}
+
+				{displayType && displayType === declarationTypes[5].value ? (
+					<>
+						<p className='is-used-molnupiravir-title'>Ông/Bà có sử dụng thuốc Molnupiravir?:</p>
+						<div className='is-used-molnupiravir'>
+							<label>
+								<input
+									type='radio'
+									name='is-used-molnupiravir'
+									onChange={() => setIsUsedMolnupiravir('no')}
+								/>
+								<span>Không</span>
+							</label>
+
+							<label>
+								<input
+									type='radio'
+									name='is-used-molnupiravir'
+									onChange={() => setIsUsedMolnupiravir('yes')}
+								/>
+								<span>Có</span>
+							</label>
+						</div>
+					</>
+				) : null}
+
+				{isUsedMolnupiravir && isUsedMolnupiravir === 'yes' ? (
+					<div className='used-molnupiravir'>
+						<div className='used-molnupiravir-title'>
+							Ông/bà có triệu chứng nào hay dấu hiệu sau khi sử dụng thuốc Molnupiravir?
+							<span className='label-red'> (*)</span>:
+						</div>
+						<div className='list-symptom-after-used-molnupiravir'>
+							{[
+								'Không',
+								'Nôn',
+								'Chóng mặt',
+								'Đau bụng',
+								'Đau tay chân',
+								'Buồn nôn',
+								'Tê tay chân',
+								'Nổi sần ngứa',
+								'Đau đầu',
+								'Đau lưng',
+								'Sổ mũi',
+								'Tiêu chảy',
+								'Yếu liệt tay chân',
+								'Triệu chứng khác'
+							].map((item, index, oldArray) => {
+								if (oldArray.length - 1 === index) {
+									return (
+										<label>
+											<span>Triệu chứng khác:</span>
+											<Input type='text' />
+										</label>
+									);
+								} else {
+									return (
+										<label>
+											<input type='checkbox' value={item} />
+											<span>{item}</span>
+										</label>
+									);
+								}
+							})}
+						</div>
+					</div>
+				) : null}
 				<div className='disease-symptoms'>
 					<div className='disease-symptoms-title'>
 						Ông/bà hiện có những triệu chứng hay biểu hiện nào sau đây không?

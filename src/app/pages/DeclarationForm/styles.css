@@ -53,7 +53,6 @@
 #form-container .list-types-declaration-list-radios input[type='radio'] {
 	width: 16px;
 	height: 16px;
-
 }
 
 #form-container .list-types-declaration-list-radios input[type='radio']:checked {
@@ -62,7 +61,7 @@
 	height: 6px;
 	border: 5px solid #3bafda;
 	border-radius: 50%;
-  transition: border-color 0.4s;
+	transition: border-color 0.4s;
 }
 
 #form-container .list-types-declaration * {
@@ -95,7 +94,7 @@
 }
 
 .btn-reset-data span.anticon-sync {
-  margin-right: 8px;
+	margin-right: 8px;
 }
 @media screen and (max-width: 690px) {
 	#form-container .list-types-declaration {
@@ -207,4 +206,132 @@
 	min-width: 100px;
 	width: 30%;
 	margin-bottom: 8px;
+}
+
+#form-container .type-of-test-object-title {
+	margin: 0;
+}
+#form-container .type-of-test-object {
+	display: flex;
+}
+
+#form-container .type-of-test-object label {
+	display: flex;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	flex-direction: row;
+	align-items: center;
+}
+
+#form-container .type-of-test-object {
+	display: flex;
+}
+
+#form-container .type-of-test-object input {
+	margin-right: 4px;
+}
+
+#form-container .place-of-test-object {
+	margin-bottom: 10px;
+}
+
+#form-container .place-of-test-object-title {
+	margin: 0;
+}
+
+#form-container .place-of-test-object label {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+#form-container .place-of-test-object label input {
+	margin-right: 4px;
+}
+
+#form-container .background-disease {
+	margin-bottom: 10px;
+	display: flex;
+}
+
+#form-container .background-disease-title {
+	margin: 0;
+}
+
+#form-container .background-disease label {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-right: 10px;
+}
+
+#form-container .background-disease label input {
+	margin-right: 4px;
+}
+
+#form-container .type-of-background-disease {
+	margin-bottom: 10px;
+}
+
+#form-container .type-of-background-disease-title {
+	margin: 0;
+}
+
+#form-container .type-of-background-disease label {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+#form-container .type-of-background-disease input {
+	margin-right: 4px;
+}
+
+#form-container .is-used-molnupiravir-title {
+	margin: 0;
+}
+
+#form-container .is-used-molnupiravir {
+	display: flex;
+	flex-direction: row;
+}
+
+#form-container .is-used-molnupiravir label {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+#form-container .is-used-molnupiravir label * {
+	margin-right: 4px;
+}
+
+#form-container .used-molnupiravir-title {
+	font-weight: 700;
+	color: var(--color-blue);
+}
+
+#form-container .list-symptom-after-used-molnupiravir {
+	display: grid;
+	grid-template-columns: 30% 70%;
+	/* width: 60%; */
+}
+
+#form-container .list-symptom-after-used-molnupiravir label {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+#form-container .list-symptom-after-used-molnupiravir label span {
+	width: 100%;
+}
+
+#form-container .list-symptom-after-used-molnupiravir label input {
+	margin-right: 4px;
+}
+
+#form-container .list-symptom-after-used-molnupiravir label input[type='text'] {
+	width: 700%;
 }
