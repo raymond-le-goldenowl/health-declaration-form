@@ -34,6 +34,7 @@ export default function DeclarationForm() {
 	const [typeOfTestObject, setTypeOfTestObject] = useState('no');
 	const [backgroundDisease, setBackgroundDisease] = useState('no');
 	const [isUsedMolnupiravir, setIsUsedMolnupiravir] = useState('no');
+	const [isError, setIsError] = useState(false);
 	const codeRef = useRef();
 
 	useEffect(() => {
@@ -141,6 +142,35 @@ export default function DeclarationForm() {
 		});
 	};
 
+	const validate = values => {
+		if (values.diaChi) {
+			notificationCustom({ type: 'warning', message: 'Chưa nhập địa chỉ.' });
+			setIsError(true);
+		} else if (values.gioiTinh) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn giới tính.' });
+			setIsError(true);
+		} else if (values.namSinh) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn năm sinh.' });
+			setIsError(true);
+		} else if (values.quanHuyen) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn quận huyện.' });
+			setIsError(true);
+		} else if (values.soDienThoai) {
+			notificationCustom({ type: 'warning', message: 'Chưa nhập số điện thoại.' });
+			setIsError(true);
+		} else if (values.ten) {
+			notificationCustom({ type: 'warning', message: 'Chưa nhập tên.' });
+			setIsError(true);
+		} else if (values.tinhThanh) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn tỉnh thành.' });
+			setIsError(true);
+		} else if (values.xaPhuong) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn xã phường.' });
+			setIsError(true);
+		} else {
+			setIsError(false);
+		}
+	};
 	const formik = useFormik({
 		initialValues: {
 			diaChi: '',
@@ -157,10 +187,13 @@ export default function DeclarationForm() {
 			tinhThanh: null,
 			xaPhuong: null
 		},
+		validate,
 		onSubmit: values => {
-			console.log(values);
-			localStorage.setItem('info', JSON.stringify(values));
-			localStorage.setItem(values.soDienThoai, values);
+			if (isError === false) {
+				console.log(values);
+				localStorage.setItem('info', JSON.stringify(values));
+				localStorage.setItem(values.soDienThoai, values);
+			}
 		}
 	});
 
