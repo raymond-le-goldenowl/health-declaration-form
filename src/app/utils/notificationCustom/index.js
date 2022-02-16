@@ -31,9 +31,8 @@ const notificationCustom = (
 				message: config.message || 'Notification Title',
 				description:
 					String(config.description).trim().length > 0
-						? config.description ||
-						  'This is the content of the notification. This is the content of the notification. This is the content of the notification.'
-						: null,
+						? config.description
+						: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
 				className: 'notification-custom',
 				style: config.styles || ''
 			});

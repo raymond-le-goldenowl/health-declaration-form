@@ -154,39 +154,40 @@ export default function DeclarationForm() {
 
 	const handleDeclarationFormSubmit = event => {
 		event.preventDefault();
-		const saveValue = {
-			diaChi: diaChi,
-			gioiTinh: gioiTinh,
-			khoaPhong: khoaPhong,
-			maBenhNhan: maBenhNhan,
-			maSinhVien: maSinhVien,
-			namSinh: namSinh,
-			noiTru: noiTru,
-			quanHuyen: JSON.parse(districtSelected),
-			quocTichID: quocTichID,
-			soDienThoai: soDienThoai,
-			ten: ten,
-			tinhThanh: JSON.parse(provinceSelected),
-			xaPhuong: JSON.parse(xaPhuong)
-		};
 
-		if (saveValue.diaChi) {
+		if (!diaChi) {
 			notificationCustom({ type: 'warning', message: 'Chưa nhập địa chỉ.' });
-		} else if (saveValue.gioiTinh) {
+		} else if (!gioiTinh) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn giới tính.' });
-		} else if (saveValue.namSinh) {
+		} else if (!namSinh) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn năm sinh.' });
-		} else if (saveValue.quanHuyen) {
+		} else if (!districtSelected) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn quận huyện.' });
-		} else if (saveValue.soDienThoai) {
+		} else if (!soDienThoai) {
 			notificationCustom({ type: 'warning', message: 'Chưa nhập số điện thoại.' });
-		} else if (saveValue.ten) {
+		} else if (!ten) {
 			notificationCustom({ type: 'warning', message: 'Chưa nhập tên.' });
-		} else if (saveValue.tinhThanh) {
+		} else if (!provinceSelected) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn tỉnh thành.' });
-		} else if (saveValue.xaPhuong) {
+		} else if (!xaPhuong) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn xã phường.' });
 		} else {
+			const saveValue = {
+				diaChi: diaChi,
+				gioiTinh: gioiTinh,
+				khoaPhong: khoaPhong,
+				maBenhNhan: maBenhNhan,
+				maSinhVien: maSinhVien,
+				namSinh: namSinh,
+				noiTru: noiTru,
+				quanHuyen: JSON.parse(districtSelected),
+				quocTichID: quocTichID,
+				soDienThoai: soDienThoai,
+				ten: ten,
+				tinhThanh: JSON.parse(provinceSelected),
+				xaPhuong: JSON.parse(xaPhuong)
+			};
+
 			console.log(saveValue);
 			localStorage.setItem('info', JSON.stringify(saveValue));
 			localStorage.setItem(saveValue.soDienThoai, saveValue);
