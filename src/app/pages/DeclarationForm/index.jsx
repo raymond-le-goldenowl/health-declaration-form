@@ -1,11 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import axios from 'axios';
+import moment from 'moment';
+import { useFormik } from 'formik';
 import { Col, Input, Row } from 'antd';
 import { SyncOutlined } from '@ant-design/icons/lib/icons';
 
 import { declarationTypes } from 'app/services';
 import { notificationCustom } from 'app/utils/notificationCustom';
+import { DATE_FORMAT } from 'app/components/DatePickerCustom/constants';
+
 import Footer from 'app/components/Footer';
 import SelectOption from 'app/components/SelectOption';
 import DatePickerCustom from 'app/components/DatePickerCustom';
@@ -31,21 +35,6 @@ export default function DeclarationForm() {
 	const [backgroundDisease, setBackgroundDisease] = useState('no');
 	const [isUsedMolnupiravir, setIsUsedMolnupiravir] = useState('no');
 	const codeRef = useRef();
-
-	const [diaChi, setDiaChi] = useState(null);
-	const [gioiTinh, setGioiTinh] = useState('Nam');
-	const [khoaPhong, setKhoaPhong] = useState(null);
-	const [maBenhNhan, setMaBenhNhan] = useState(null);
-	const [maSinhVien, setMaSinhVien] = useState(null);
-	const [namSinh, setNamSinh] = useState(null);
-	// const [ngaySinh, setNgaySinh] = useState(null);
-	const [noiTru, setNoiTru] = useState(0);
-	// const [quanHuyen, setQuanHuyen] = useState({}); // disStrict
-	const [quocTichID, setQuocTichID] = useState(null);
-	const [soDienThoai, setSoDienThoai] = useState(null);
-	const [ten, setTen] = useState(null);
-	// const [tinhThanh, setTinh] = useState({}); // province
-	const [xaPhuong, setXaPhuong] = useState({});
 
 	useEffect(() => {
 		const diseaseSymptomsUrl = `https://kbyt.khambenh.gov.vn/api/v1/trieuchung?q={%22filters%22:{%22$and%22:[{%22trangthai%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22thutu_uutien%22,%22direction%22:%22asc%22}]}`;
@@ -152,47 +141,28 @@ export default function DeclarationForm() {
 		});
 	};
 
-	const handleDeclarationFormSubmit = event => {
-		event.preventDefault();
-
-		if (!diaChi) {
-			notificationCustom({ type: 'warning', message: 'Chưa nhập địa chỉ.' });
-		} else if (!gioiTinh) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn giới tính.' });
-		} else if (!namSinh) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn năm sinh.' });
-		} else if (!districtSelected) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn quận huyện.' });
-		} else if (!soDienThoai) {
-			notificationCustom({ type: 'warning', message: 'Chưa nhập số điện thoại.' });
-		} else if (!ten) {
-			notificationCustom({ type: 'warning', message: 'Chưa nhập tên.' });
-		} else if (!provinceSelected) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn tỉnh thành.' });
-		} else if (!xaPhuong) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn xã phường.' });
-		} else {
-			const saveValue = {
-				diaChi: diaChi,
-				gioiTinh: gioiTinh,
-				khoaPhong: khoaPhong,
-				maBenhNhan: maBenhNhan,
-				maSinhVien: maSinhVien,
-				namSinh: namSinh,
-				noiTru: noiTru,
-				quanHuyen: JSON.parse(districtSelected),
-				quocTichID: quocTichID,
-				soDienThoai: soDienThoai,
-				ten: ten,
-				tinhThanh: JSON.parse(provinceSelected),
-				xaPhuong: JSON.parse(xaPhuong)
-			};
-
-			console.log(saveValue);
-			localStorage.setItem('info', JSON.stringify(saveValue));
-			localStorage.setItem(saveValue.soDienThoai, saveValue);
+	const formik = useFormik({
+		initialValues: {
+			diaChi: '',
+			gioiTinh: 'Nam',
+			khoaPhong: '',
+			maBenhNhan: '',
+			maSinhVien: '',
+			namSinh: moment(moment(moment()._d).format(DATE_FORMAT), DATE_FORMAT),
+			noiTru: '',
+			quanHuyen: null,
+			quocTichID: '',
+			soDienThoai: '',
+			ten: '',
+			tinhThanh: null,
+			xaPhuong: null
+		},
+		onSubmit: values => {
+			console.log(values);
+			localStorage.setItem('info', JSON.stringify(values));
+			localStorage.setItem(values.soDienThoai, values);
 		}
-	};
+	});
 
 	return (
 		<div id='declaration-form'>
@@ -201,7 +171,7 @@ export default function DeclarationForm() {
 				KHAI BÁO THÔNG TIN SAI LÀ VI PHẠM PHÁP LUẬT VIỆT NAM VÀ CÓ THỂ XỬ LÝ HÌNH SỰ
 			</h3>
 
-			<form id='form-container' onSubmit={handleDeclarationFormSubmit}>
+			<form id='form-container' onSubmit={formik.handleSubmit}>
 				<div className='list-types-declaration'>
 					<div className='list-types-declaration-list-radios'>
 						{declarationTypesState.map(declarationType => {
@@ -247,8 +217,9 @@ export default function DeclarationForm() {
 						</span>
 						<Input
 							type='number'
-							value={soDienThoai}
-							onChange={({ target }) => setSoDienThoai(target.value)}
+							// value={soDienThoai}
+							// onChange={({ target }) => setSoDienThoai(target.value)}
+							{...formik.getFieldProps('soDienThoai')}
 						/>
 					</label>
 				</div>
@@ -260,8 +231,9 @@ export default function DeclarationForm() {
 					<Input
 						type='text'
 						placeholder='Họ và tên'
-						value={ten}
-						onChange={({ target }) => setTen(target.value)}
+						// value={ten}
+						// onChange={({ target }) => setTen(target.value)}
+						{...formik.getFieldProps('ten')}
 					/>
 				</label>
 				<Row gutter={16}>
@@ -270,7 +242,13 @@ export default function DeclarationForm() {
 							<span>
 								Ngày sinh <span className='label-red'> (*)</span>:
 							</span>
-							<DatePickerCustom getValueSelected={setNamSinh} />
+							<DatePickerCustom
+								getValueSelected={value => {
+									formik.setFieldValue('namSinh', value);
+								}}
+								// formik={formik}
+								// fieldName={'namSinh'}
+							/>
 						</label>
 					</Col>
 
@@ -281,8 +259,9 @@ export default function DeclarationForm() {
 							</span>
 							<Input
 								type='text'
-								value={gioiTinh}
-								onChange={({ target }) => setGioiTinh(target.value)}
+								// value={gioiTinh}
+								// onChange={({ target }) => setGioiTinh(target.value)}
+								{...formik.getFieldProps('gioiTinh')}
 							/>
 						</label>
 					</Col>
@@ -296,8 +275,9 @@ export default function DeclarationForm() {
 							<Input
 								type='number'
 								placeholder='Mã nhân viên'
-								value={maBenhNhan}
-								onChange={({ target }) => setMaBenhNhan(target.value)}
+								// value={maBenhNhan}
+								// onChange={({ target }) => setMaBenhNhan(target.value)}
+								{...formik.getFieldProps('maBenhNhan')}
 							/>
 						</label>
 
@@ -306,8 +286,9 @@ export default function DeclarationForm() {
 							<Input
 								type='text'
 								placeholder='Khoa/phòng'
-								value={khoaPhong}
-								onChange={({ target }) => setKhoaPhong(target.value)}
+								// value={khoaPhong}
+								// onChange={({ target }) => setKhoaPhong(target.value)}
+								{...formik.getFieldProps('khoaPhong')}
 							/>
 						</label>
 					</>
@@ -329,7 +310,10 @@ export default function DeclarationForm() {
 								width={'100'}
 								options={nations}
 								defaultValue={'Việt Nam'}
-								getValueSelected={setQuocTichID}
+								// getValueSelected={setQuocTichID}
+								getValueSelected={value => {
+									formik.setFieldValue('quocTichID', value);
+								}}
 							/>
 						</label>
 					</Col>
@@ -348,7 +332,11 @@ export default function DeclarationForm() {
 								placeholder={'Tỉnh thành'}
 								width={'100'}
 								options={provinces}
-								getValueSelected={setProvinceSelected}
+								// getValueSelected={setProvinceSelected}
+								getValueSelected={value => {
+									setProvinceSelected(value);
+									formik.setFieldValue('tinhThanh', value);
+								}}
 							/>
 						</label>
 					</Col>
@@ -364,11 +352,15 @@ export default function DeclarationForm() {
 								Quận huyện <span className='label-red'> (*)</span>:
 							</span>
 							<SelectOption
-								disabled={provinceSelected !== null ? false : true}
+								disabled={formik.values.tinhThanh !== null ? false : true}
 								placeholder={'Quận huyện'}
 								width={'100'}
 								options={districts}
-								getValueSelected={setDistrictSelected}
+								// getValueSelected={setDistrictSelected}
+								getValueSelected={value => {
+									setDistrictSelected(value);
+									formik.setFieldValue('quanHuyen', value);
+								}}
 							/>
 						</label>
 					</Col>
@@ -384,11 +376,14 @@ export default function DeclarationForm() {
 								Xã phường <span className='label-red'> (*)</span>:
 							</span>
 							<SelectOption
-								disabled={districtSelected !== null ? false : true}
+								disabled={formik.values.quanHuyen !== null ? false : true}
 								placeholder={'Xã phường'}
 								width={'100'}
 								options={wards}
-								getValueSelected={setXaPhuong}
+								// getValueSelected={setXaPhuong}
+								getValueSelected={value => {
+									formik.setFieldValue('xaPhuong', value);
+								}}
 							/>
 						</label>
 					</Col>
@@ -401,8 +396,9 @@ export default function DeclarationForm() {
 					<Input
 						type='text'
 						placeholder='Số nhà, tên đường'
-						value={diaChi}
-						onChange={({ target }) => setDiaChi(target.value)}
+						// value={diaChi}
+						// onChange={({ target }) => setDiaChi(target.value)}
+						{...formik.getFieldProps('diaChi')}
 					/>
 				</label>
 
@@ -420,8 +416,9 @@ export default function DeclarationForm() {
 						<Input
 							type='text'
 							placeholder='Nhập chính xác CMND/CCCD'
-							value={maSinhVien}
-							onChange={({ target }) => setMaSinhVien(target.value)}
+							// value={maSinhVien}
+							// onChange={({ target }) => setMaSinhVien(target.value)}
+							{...formik.getFieldProps('maSinhVien')}
 						/>
 					</label>
 				) : null}
