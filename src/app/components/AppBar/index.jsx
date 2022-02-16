@@ -4,6 +4,7 @@ import { Dropdown, Menu } from 'antd';
 
 import imageLogoBoYTe from 'app/assets/images/imageLogoBoYTe.png';
 import textLogoBoYTe from 'app/assets/images/textLogoBoYTe.png';
+
 import './styles.css';
 
 export default function AppBar() {
