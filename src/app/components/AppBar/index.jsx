@@ -1,9 +1,11 @@
 import React from 'react';
-import { ClockCircleOutlined, FileAddOutlined, MenuOutlined } from '@ant-design/icons/lib/icons';
-import { Dropdown, Menu } from 'antd';
 
-import imageLogoBoYTe from '../../assets/imageLogoBoYTe.png';
-import textLogoBoYTe from '../../assets/textLogoBoYTe.png';
+import { Dropdown, Menu } from 'antd';
+import { ClockCircleOutlined, FileAddOutlined, MenuOutlined } from '@ant-design/icons/lib/icons';
+
+import textLogoBoYTe from 'app/assets/images/textLogoBoYTe.png';
+import imageLogoBoYTe from 'app/assets/images/imageLogoBoYTe.png';
+
 import './styles.scss';
 
 export default function AppBar() {
