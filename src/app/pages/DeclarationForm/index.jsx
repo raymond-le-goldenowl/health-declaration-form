@@ -16,6 +16,10 @@ import DatePickerCustom from 'app/components/DatePickerCustom';
 
 import './styles.scss';
 
+const makeCaptchaNumbers = (min = 1000, max = 99999) => {
+	return Math.floor(Math.random() * (max - min) + min);
+};
+
 export default function DeclarationForm() {
 	const { TextArea } = Input;
 
@@ -720,7 +724,7 @@ export default function DeclarationForm() {
 						Vui lòng nhập mã xác thực <span className='label-red'> (*)</span>:
 					</div>
 					<div ref={codeRef} className='captcha-text'>
-						{captchaText}
+						{makeCaptchaNumbers()}
 					</div>
 					<Input
 						type='number'

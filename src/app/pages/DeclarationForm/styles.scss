@@ -195,18 +195,28 @@
 		.more-info {
 			margin-top: 8px;
 		}
-		.captcha-title {
-			margin-top: 5px;
-			font-weight: 700;
-			color: $color-blue;
-		}
 
-		.captcha-code {
-			height: calc(1.5em + 0.5rem + 2px) !important;
-			padding: 0.15rem 0.5rem;
-			color: #393939;
-			width: 200px;
-			margin-top: 20px;
+		.captcha {
+			&-title {
+				margin-top: 5px;
+				font-weight: 700;
+				color: $color-blue;
+			}
+
+			&-text {
+				font-size: 1.4rem;
+				color: $color-blue;
+				font-weight: 600;
+				margin-top: 15px;
+			}
+
+			&-code {
+				height: calc(1.5em + 0.5rem + 2px) !important;
+				padding: 0.15rem 0.5rem;
+				color: #393939;
+				width: 200px;
+				margin-top: 20px;
+			}
 		}
 
 		.submit-button-center {
