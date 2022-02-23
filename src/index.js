@@ -1,12 +1,12 @@
 import ReactDOM from 'react-dom';
 import React, { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-
 import * as serviceWorker from './serviceWorker';
+
+import { history, renderRouteConfigs, routes } from 'app/config/router';
 
 import './index.css';
 import 'antd/dist/antd.css';
-import { history, renderRouteConfigs, routes } from 'app/config/router';
 
 ReactDOM.render(
 	<React.StrictMode>
