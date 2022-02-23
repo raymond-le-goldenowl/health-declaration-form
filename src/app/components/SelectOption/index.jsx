@@ -41,7 +41,7 @@ export default function SelectOption({
 			>
 				{options &&
 					options.map(option => (
-						<Option key={option.key} value={option.value} style={{ fontSize: '1rem' }}>
+						<Option key={option.key} value={JSON.stringify(option)} style={{ fontSize: '1rem' }}>
 							{option.text}
 						</Option>
 					))}

@@ -27,23 +27,36 @@
 			height: 50px;
 		}
 
-		.topnav-menu svg {
-			font-size: 1.9rem;
-			fill: $color-white;
-			font-weight: 900;
-			cursor: pointer;
-
-			.path {
+		.topnav-menu {
+			svg {
+				font-size: 1.9rem;
+				fill: $color-white;
 				font-weight: 900;
+				cursor: pointer;
+
+				.path {
+					font-weight: 900;
+				}
 			}
-		}
 
-		.link-text {
-			margin-left: 0.375rem;
-		}
+			.menu-links {
+				span.link-text {
+					display: inline-block;
+					padding: 10px;
+				}
+				span.anticon {
+					display: inline-block;
+					padding: 10px;
+				}
 
-		a {
-			color: $color-gray;
+				.link-text {
+					margin-left: 1rem;
+				}
+
+				a {
+					color: $color-gray;
+				}
+			}
 		}
 	}
 }
