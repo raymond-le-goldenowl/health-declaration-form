@@ -231,7 +231,7 @@ export default function DeclarationForm() {
 					</div>
 				</div>
 				{displayType && displayType === declarationTypes[5].value ? (
-					<div center className='label-red' style={{ textAlign: 'center' }}>
+					<div className='label-red' style={{ textAlign: 'center' }}>
 						Sử dụng cho F0 khai báo sức khoẻ và cách ly tại nhà
 					</div>
 				) : null}
