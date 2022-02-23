@@ -231,7 +231,7 @@
 }
 
 #form-container .type-of-test-object input {
-	margin-right: 4px;
+	margin-right: 8px;
 }
 
 #form-container .place-of-test-object {
@@ -249,7 +249,7 @@
 }
 
 #form-container .place-of-test-object label input {
-	margin-right: 4px;
+	margin-right: 8px;
 }
 
 #form-container .background-disease {
@@ -269,7 +269,7 @@
 }
 
 #form-container .background-disease label input {
-	margin-right: 4px;
+	margin-right: 8px;
 }
 
 #form-container .type-of-background-disease {
@@ -287,7 +287,7 @@
 }
 
 #form-container .type-of-background-disease input {
-	margin-right: 4px;
+	margin-right: 8px;
 }
 
 #form-container .is-used-molnupiravir-title {
@@ -306,7 +306,7 @@
 }
 
 #form-container .is-used-molnupiravir label * {
-	margin-right: 4px;
+	margin-right: 8px;
 }
 
 #form-container .used-molnupiravir-title {
@@ -331,7 +331,7 @@
 }
 
 #form-container .list-symptom-after-used-molnupiravir label input {
-	margin-right: 4px;
+	margin-right: 8px;
 }
 
 #form-container .list-symptom-after-used-molnupiravir label input[type='text'] {
