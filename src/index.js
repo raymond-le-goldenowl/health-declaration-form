@@ -4,7 +4,7 @@ import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
 import AppBar from 'app/components/AppBar';
-import Footer from './app/components/Footer';
+import Footer from 'app/components/Footer';
 import SelectOption from 'app/components/SelectOption';
 
 import './index.scss';
