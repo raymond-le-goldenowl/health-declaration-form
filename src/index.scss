@@ -4,14 +4,11 @@
 * *********** Global ********************** *
 */
 
-:root {
-	--color-blue: #0156c1;
-	--color-red: red;
-	--color-gray: #6c757d;
-	--color-black: black;
-	--color-white: white;
-	--color-teal: #3bafda;
-}
+$color-blue: #0156c1;
+$color-red: red;
+$color-gray: #6c757d;
+$color-black: black;
+$color-white: white;
 
 body {
 	margin: 0;

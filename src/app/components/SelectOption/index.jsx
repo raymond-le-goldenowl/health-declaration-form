@@ -1,10 +1,9 @@
+import { Select as AntSelect } from 'antd';
 import React, { useState } from 'react';
 
-import { Select as AntSelect } from 'antd';
+import './styles.scss';
 
-import './styles.css';
-
-const { AntOption = Option } = AntSelect;
+const { Option } = AntSelect;
 
 export default function SelectOption({
 	options,
@@ -42,12 +41,11 @@ export default function SelectOption({
 			>
 				{options &&
 					options.map(option => (
-						<AntOption key={option.key} value={JSON.stringify(option)} style={{ fontSize: '1rem' }}>
+						<Option key={option.key} value={option.value} style={{ fontSize: '1rem' }}>
 							{option.text}
-						</AntOption>
+						</Option>
 					))}
 			</AntSelect>
-
 			<span
 				className={`anticon anticon-search ant-select-suffix pos-anticon-search ${
 					isArrowUp ? 'animate-anticon-search' : ''

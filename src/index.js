@@ -5,7 +5,7 @@ import * as serviceWorker from './serviceWorker';
 
 import { history, renderRouteConfigs, routes } from 'app/config/router';
 
-import './index.css';
+import './index.scss';
 import 'antd/dist/antd.css';
 
 ReactDOM.render(
