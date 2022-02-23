@@ -14,7 +14,7 @@ import Footer from 'app/components/Footer';
 import SelectOption from 'app/components/SelectOption';
 import DatePickerCustom from 'app/components/DatePickerCustom';
 
-import './styles.css';
+import './styles.scss';
 
 export default function DeclarationForm() {
 	const { TextArea } = Input;
