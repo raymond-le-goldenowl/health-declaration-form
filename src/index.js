@@ -9,6 +9,8 @@ import DatePickerCustom from 'app/components/DatePickerCustom';
 import './index.scss';
 import 'antd/dist/antd.css';
 
+import './index.scss';
+
 ReactDOM.render(
 	<React.StrictMode>
 		<AppBar />
