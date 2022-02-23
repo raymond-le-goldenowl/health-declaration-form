@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
 import AppBar from 'app/components/AppBar';
+import Footer from './app/components/Footer';
 import SelectOption from 'app/components/SelectOption';
 
 import './index.scss';
@@ -30,6 +32,7 @@ ReactDOM.render(
 			placeholder={'Select option'}
 			defaultValue={'1'}
 		/>
+		<Footer />
 	</React.StrictMode>,
 	document.getElementById('root')
 );
