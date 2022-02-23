@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.scss';
 import * as serviceWorker from './serviceWorker';
-import 'antd/dist/antd.css';
 
 import Footer from './app/components/Footer';
+
+import './index.scss';
+import 'antd/dist/antd.css';
 
 ReactDOM.render(
 	<React.StrictMode>

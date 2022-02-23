@@ -1,0 +1,78 @@
+/* 
+* *********** Authors: Raymond ************ *
+* *********** Created at: 19/1/2022 ******* *
+* *********** Component: AppBar *********** *
+*/
+
+.app-bar-wrapper {
+	background-color: var(--color-blue);
+}
+
+.app-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.4rem 1rem;
+	transition: all 0.4s;
+}
+
+.app-bar .logo-box {
+	display: flex;
+	align-items: center;
+}
+
+.app-bar .logo-box a.logo-lg span {
+	display: none;
+}
+
+.app-bar .logo-sm img {
+	height: 50px;
+}
+
+.app-bar .topnav-menu svg {
+	font-size: 1.9rem;
+	fill: var(--color-white);
+	font-weight: 900;
+	cursor: pointer;
+}
+
+.app-bar .topnav-menu .svg .path {
+	font-weight: 900;
+}
+
+.link-text {
+	margin-left: 0.375rem;
+}
+
+.menu-links a {
+	color: var(--color-gray);
+}
+
+/* ########### RESPONSIVE ########### */
+
+@media screen and (min-width: 1050px) {
+	.app-bar .logo-sm img {
+		display: none;
+	}
+
+	.app-bar .logo-box a.logo-lg span {
+		display: inline-block;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		padding-left: 15px;
+		line-height: 1.7;
+		font-size: 1.125rem;
+		text-transform: uppercase;
+		font-weight: 600;
+		color: var(--color-white);
+	}
+}
+
+@media screen and (min-width: 1370px) {
+	.app-bar {
+		margin: 0 auto;
+		width: 90%;
+		transition: all 0.4s;
+	}
+}
