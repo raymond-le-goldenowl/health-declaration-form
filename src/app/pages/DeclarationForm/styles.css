@@ -17,7 +17,8 @@
 }
 
 #form-container {
-	width: 80%;
+	width: 65%;
+
 	overflow: hidden;
 	margin: 0 auto;
 	margin-bottom: 35px;
@@ -42,6 +43,7 @@
 
 #form-container .list-types-declaration {
 	display: flex;
+	flex-direction: column;
 }
 
 #form-container .list-types-declaration-list-radios {
@@ -72,7 +74,7 @@
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	margin-right: 30px;
+	margin-right: 20px;
 }
 
 .btn-reset-data-wrapper {
@@ -96,9 +98,9 @@
 .btn-reset-data span.anticon-sync {
 	margin-right: 8px;
 }
-@media screen and (max-width: 690px) {
+@media screen and (max-width: 1750px) {
 	#form-container .list-types-declaration {
-		flex-direction: column;
+		flex-direction: row;
 	}
 }
 

@@ -404,7 +404,6 @@ export default function DeclarationForm() {
 						md={{ span: 12 }}
 						xs={{ span: 24 }}
 					>
-						Nam
 						<label>
 							<span>
 								Xã phường <span className='label-red'> (*)</span>:
