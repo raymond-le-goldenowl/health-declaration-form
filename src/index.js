@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import * as serviceWorker from './serviceWorker';
 
 import AppBar from 'app/components/AppBar';
+import Footer from './app/components/Footer';
 import DatePickerCustom from 'app/components/DatePickerCustom';
 
-import './index.css';
+import './index.scss';
 import 'antd/dist/antd.css';
 
 ReactDOM.render(
@@ -15,6 +15,7 @@ ReactDOM.render(
 		<h1>Hello World</h1>
 
 		<DatePickerCustom />
+		<Footer />
 	</React.StrictMode>,
 	document.getElementById('root')
 );
