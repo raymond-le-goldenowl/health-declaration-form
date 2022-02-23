@@ -5,12 +5,13 @@
 */
 
 /* Update color for selection day */
-.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
-	background-color: var(--color-teal);
-}
-
-.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
-	border-color: var(--color-teal);
+.ant-picker-cell-in-view {
+	.ant-picker-cell-selected .ant-picker-cell-inner {
+		background-color: var(--color-teal);
+	}
+	.ant-picker-cell-today .ant-picker-cell-inner::before {
+		border-color: var(--color-teal);
+	}
 }
 
 /* Create triangle */
