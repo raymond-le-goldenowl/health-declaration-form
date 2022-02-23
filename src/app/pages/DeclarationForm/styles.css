@@ -99,9 +99,7 @@
 input.ant-input {
 	margin-bottom: 8px;
 }
-label>span {
-  margin-bottom: 8px;
-}
+
 .btn-reset-data span.anticon-sync {
 	margin-right: 8px;
 }
