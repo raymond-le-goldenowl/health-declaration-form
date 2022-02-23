@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
 import AppBar from 'app/components/AppBar';
 import Footer from './app/components/Footer';
+import SelectOption from 'app/components/SelectOption';
 import DatePickerCustom from 'app/components/DatePickerCustom';
 
 import './index.scss';
 import 'antd/dist/antd.css';
-
-import SelectOption from 'app/components/SelectOption';
 
 // demo data
 const options = [
@@ -26,7 +26,8 @@ ReactDOM.render(
 		<AppBar />
 
 		<DatePickerCustom />
-		<Footer />
+		<h1>Hello World</h1>
+
 		{/* demo render custom */}
 		<SelectOption
 			options={options}
@@ -34,6 +35,7 @@ ReactDOM.render(
 			placeholder={'Select option'}
 			defaultValue={'1'}
 		/>
+		<Footer />
 	</React.StrictMode>,
 	document.getElementById('root')
 );

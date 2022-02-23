@@ -3,8 +3,8 @@ import React from 'react';
 import { Dropdown, Menu } from 'antd';
 import { ClockCircleOutlined, FileAddOutlined, MenuOutlined } from '@ant-design/icons/lib/icons';
 
-import imageLogoBoYTe from 'app/assets/images/imageLogoBoYTe.png';
 import textLogoBoYTe from 'app/assets/images/textLogoBoYTe.png';
+import imageLogoBoYTe from 'app/assets/images/imageLogoBoYTe.png';
 
 import './styles.scss';
 
