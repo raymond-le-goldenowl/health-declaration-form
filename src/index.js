@@ -6,10 +6,9 @@ import AppBar from 'app/components/AppBar';
 import Footer from 'app/components/Footer';
 import SelectOption from 'app/components/SelectOption';
 
-import { notificationCustom } from 'app/utils/notificationCustom';
-
 import './index.scss';
 import 'antd/dist/antd.css';
+import { notificationCustom } from 'app/utils/notificationCustom';
 
 notificationCustom({ description: '  ', type: 'success' });
 
@@ -25,7 +24,7 @@ const options = [
 
 ReactDOM.render(
 	<React.StrictMode>
-		<h1>Hello World</h1>
+		<AppBar />
 
 		{/* demo render custom */}
 		<SelectOption
@@ -34,6 +33,7 @@ ReactDOM.render(
 			placeholder={'Select option'}
 			defaultValue={'1'}
 		/>
+		<Footer />
 	</React.StrictMode>,
 	document.getElementById('root')
 );
