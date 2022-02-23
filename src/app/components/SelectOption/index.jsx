@@ -1,7 +1,7 @@
 import { Select as AntSelect } from 'antd';
 import React, { useState } from 'react';
 
-import './styles.css';
+import './styles.scss';
 
 const { AntOption = Option } = AntSelect;
 
