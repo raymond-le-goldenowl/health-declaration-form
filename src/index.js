@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
 import AppBar from 'app/components/AppBar';
@@ -8,7 +9,7 @@ import Footer from 'app/components/Footer';
 
 import { notificationCustom } from 'app/utils/notificationCustom';
 
-import './index.css';
+import './index.scss';
 import 'antd/dist/antd.css';
 
 notificationCustom({ description: '  ', type: 'success' });
