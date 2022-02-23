@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import * as serviceWorker from './serviceWorker';
 
+import AppBar from 'app/components/AppBar';
 import SelectOption from 'app/components/SelectOption';
 
+import './index.scss';
 import 'antd/dist/antd.css';
-import './index.css';
 
 // demo data
 const options = [
@@ -20,6 +20,7 @@ const options = [
 
 ReactDOM.render(
 	<React.StrictMode>
+		<AppBar />
 		<h1>Hello World</h1>
 
 		{/* demo render custom */}
