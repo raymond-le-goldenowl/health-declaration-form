@@ -187,8 +187,8 @@ export default function DeclarationForm() {
 			tinhThanh: null,
 			xaPhuong: null
 		},
-		validate,
 		onSubmit: values => {
+			validate(values);
 			if (isError === false) {
 				console.log(values);
 				localStorage.setItem('info', JSON.stringify(values));
@@ -230,6 +230,11 @@ export default function DeclarationForm() {
 						</button>
 					</div>
 				</div>
+				{displayType && displayType === declarationTypes[5].value ? (
+					<div className='label-red' style={{ textAlign: 'center' }}>
+						Sử dụng cho F0 khai báo sức khoẻ và cách ly tại nhà
+					</div>
+				) : null}
 				<div>
 					<label>
 						<span>
@@ -493,7 +498,8 @@ export default function DeclarationForm() {
 					</>
 				) : null}
 
-				{typeOfTestObject === 'yes' ? (
+				{(displayType === declarationTypes[4].value || displayType === declarationTypes[5].value) &&
+				typeOfTestObject === 'yes' ? (
 					<>
 						<p className='place-of-test-object-title'>Nơi xét nghiệm:</p>
 						<div className='place-of-test-object'>
@@ -541,7 +547,10 @@ export default function DeclarationForm() {
 						</div>
 					</>
 				) : null}
-				{backgroundDisease && backgroundDisease === 'yes' ? (
+				{displayType &&
+				displayType === declarationTypes[5].value &&
+				backgroundDisease &&
+				backgroundDisease === 'yes' ? (
 					<>
 						<p className='type-of-background-disease-title'>Chọn bệnh nền: </p>
 						<div className='type-of-background-disease'>
@@ -594,7 +603,10 @@ export default function DeclarationForm() {
 					</>
 				) : null}
 
-				{isUsedMolnupiravir && isUsedMolnupiravir === 'yes' ? (
+				{displayType &&
+				displayType === declarationTypes[5].value &&
+				isUsedMolnupiravir &&
+				isUsedMolnupiravir === 'yes' ? (
 					<div className='used-molnupiravir'>
 						<div className='used-molnupiravir-title'>
 							Ông/bà có triệu chứng nào hay dấu hiệu sau khi sử dụng thuốc Molnupiravir?
