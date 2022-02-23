@@ -2,338 +2,341 @@
 
 #declaration-form {
 	margin: 10px 0px;
-}
-#declaration-form .title-blue {
-	font-weight: 700;
-	text-align: center;
-	color: $color-blue;
-}
 
-#declaration-form .title-red {
-	text-align: center;
-	color: $color-red;
-}
-
-.label-red {
-	color: $color-red;
-}
-
-#form-container {
-	width: 80%;
-	overflow: hidden;
-	margin: 0 auto;
-	margin-bottom: 35px;
-	box-shadow: 0 0.75rem 6rem rgb(56 65 74 / 3%);
-	padding: 20px;
-	background-clip: border-box;
-	border: 1px solid #e7eaed;
-	border-radius: 0.25rem;
-	min-width: 0;
-	word-wrap: break-word;
-}
-
-#form-container label {
-	display: flex;
-	flex-direction: column;
-}
-
-.declaration-type-bold {
-	font-weight: bold;
-	margin-left: 5px;
-}
-
-#form-container .list-types-declaration {
-	display: flex;
-}
-
-#form-container .list-types-declaration-list-radios {
-	flex: 10;
-	display: flex;
-	flex-wrap: wrap;
-}
-
-#form-container .list-types-declaration-list-radios input[type='radio'] {
-	width: 16px;
-	height: 16px;
-}
-
-#form-container .list-types-declaration-list-radios input[type='radio']:checked {
-	all: unset;
-	width: 6px;
-	height: 6px;
-	border: 5px solid #3bafda;
-	border-radius: 50%;
-	transition: border-color 0.4s;
-}
-
-#form-container .list-types-declaration * {
-	cursor: pointer;
-}
-
-#form-container .list-types-declaration label {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	margin-right: 30px;
-}
-
-.btn-reset-data-wrapper {
-	flex: 2;
-	display: flex;
-	justify-content: flex-end;
-	align-items: flex-end;
-}
-
-.btn-reset-data {
-	all: unset;
-	border: 1px solid #0056c1;
-	color: #0056c1;
-	padding: 4px 8px;
-	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-	border-radius: 0.25rem;
-}
-
-.btn-reset-data span.anticon-sync {
-	margin-right: 8px;
-}
-@media screen and (max-width: 690px) {
-	#form-container .list-types-declaration {
-		flex-direction: column;
+	.title-blue {
+		font-weight: 700;
+		text-align: center;
+		color: $color-blue;
 	}
-}
 
-.disease-symptoms-title {
-	font-weight: 700;
-	color: $color-blue;
-}
+	.title-red {
+		text-align: center;
+		color: $color-red;
+	}
 
-.epidemiological-factors-title {
-	font-weight: 700;
-	color: $color-blue;
-}
+	.label-red {
+		color: $color-red;
+	}
 
-.disease-symptoms-table {
-	width: 100%;
-}
+	#form-container {
+		width: 80%;
+		overflow: hidden;
+		margin: 0 auto;
+		margin-bottom: 35px;
+		box-shadow: 0 0.75rem 6rem rgb(56 65 74 / 3%);
+		padding: 20px;
+		background-clip: border-box;
+		border: 1px solid #e7eaed;
+		border-radius: 0.25rem;
+		min-width: 0;
+		word-wrap: break-word;
 
-.disease-symptoms-table tr th:nth-child(2) {
-	vertical-align: middle;
-	min-width: 70px;
-	width: 70px;
-}
+		label {
+			display: flex;
+			flex-direction: column;
+		}
 
-.disease-symptoms-table tr th:nth-child(3) {
-	vertical-align: middle;
-	min-width: 70px;
-	width: 70px;
-}
+		.list-types-declaration {
+			display: flex;
+		}
 
-.disease-symptoms-table tr :is(td:nth-child(2), td:nth-child(3)) {
-	text-align: center;
-	vertical-align: middle;
-}
+		.list-types-declaration-list-radios {
+			flex: 10;
+			display: flex;
+			flex-wrap: wrap;
 
-.disease-symptoms-table :is(td, th) {
-	padding: 15px 10px;
-	border: 1px solid #edeff1;
-}
+			input[type='radio'] {
+				width: 16px;
+				height: 16px;
+			}
 
-.disease-symptoms-table tbody td {
-	font-weight: 500;
-}
+			input[type='radio']:checked {
+				all: unset;
+				width: 6px;
+				height: 6px;
+				border: 5px solid #3bafda;
+				border-radius: 50%;
+				transition: border-color 0.4s;
+			}
+		}
 
-.epidemiological-factors-table {
-	width: 100%;
-}
+		.list-types-declaration * {
+			cursor: pointer;
 
-.epidemiological-factors-table tr th:nth-child(2) {
-	vertical-align: middle;
-	min-width: 70px;
-	width: 70px;
-	text-align: center;
-}
+			label {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				margin-right: 30px;
+			}
+		}
 
-.epidemiological-factors-table tr th:nth-child(3) {
-	vertical-align: middle;
-	min-width: 70px;
-	width: 70px;
-	text-align: center;
-}
+		@media screen and (max-width: 690px) {
+			.list-types-declaration {
+				flex-direction: column;
+			}
+		}
 
-.epidemiological-factors-table tr :is(td:nth-child(2), td:nth-child(3)) {
-	text-align: center;
-	vertical-align: middle;
-}
+		.declaration-type-bold {
+			font-weight: bold;
+			margin-left: 5px;
+		}
 
-.epidemiological-factors-table :is(td, th) {
-	padding: 15px 10px;
-	border: 1px solid #edeff1;
-}
+		.btn-reset-data-wrapper {
+			flex: 2;
+			display: flex;
+			justify-content: flex-end;
+			align-items: flex-end;
 
-.epidemiological-factors-table tbody td {
-	font-weight: 500;
-}
+			.btn-reset-data {
+				all: unset;
+				border: 1px solid #0056c1;
+				color: #0056c1;
+				padding: 4px 8px;
+				display: flex;
+				justify-content: space-evenly;
+				align-items: center;
+				border-radius: 0.25rem;
 
-.more-info {
-	margin-top: 8px;
-}
-.captcha-title {
-	margin-top: 5px;
-	font-weight: 700;
-	color: $color-blue;
-}
+				span.anticon-sync {
+					margin-right: 8px;
+				}
+			}
+		}
 
-.captcha-code {
-	height: calc(1.5em + 0.5rem + 2px) !important;
-	padding: 0.15rem 0.5rem;
-	color: #393939;
-	width: 200px;
-	margin-top: 20px;
-}
+		.disease-symptoms-title {
+			font-weight: 700;
+			color: $color-blue;
+		}
 
-.submit-button-center {
-	text-align: center;
-}
+		.epidemiological-factors-title {
+			font-weight: 700;
+			color: $color-blue;
+		}
 
-.submit-button-center button[type='submit'] {
-	all: unset;
-	color: $color-white;
-	background-color: $color-blue;
-	padding: 0.45rem 0.9rem;
-	font-size: 0.9rem;
-	line-height: 1.5;
-	border-radius: 0.15rem;
-	min-width: 100px;
-	width: 30%;
-	margin-bottom: 8px;
-}
+		.disease-symptoms-table {
+			width: 100%;
 
-#form-container .type-of-test-object-title {
-	margin: 0;
-}
-#form-container .type-of-test-object {
-	display: flex;
-}
+			tr {
+				th {
+					&:nth-child(2) {
+						vertical-align: middle;
+						min-width: 70px;
+						width: 70px;
+					}
 
-#form-container .type-of-test-object label {
-	display: flex;
-	margin-right: 10px;
-	margin-bottom: 10px;
-	margin-top: 10px;
-	flex-direction: row;
-	align-items: center;
-}
+					&:nth-child(3) {
+						vertical-align: middle;
+						min-width: 70px;
+						width: 70px;
+					}
+				}
 
-#form-container .type-of-test-object {
-	display: flex;
-}
+				:is(td:nth-child(2), td:nth-child(3)) {
+					text-align: center;
+					vertical-align: middle;
+				}
+			}
 
-#form-container .type-of-test-object input {
-	margin-right: 4px;
-}
+			:is(td, th) {
+				padding: 15px 10px;
+				border: 1px solid #edeff1;
+			}
 
-#form-container .place-of-test-object {
-	margin-bottom: 10px;
-}
+			tbody td {
+				font-weight: 500;
+			}
+		}
 
-#form-container .place-of-test-object-title {
-	margin: 0;
-}
+		.epidemiological-factors-table {
+			width: 100%;
 
-#form-container .place-of-test-object label {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-}
+			tr {
+				th {
+					&:nth-child(2) {
+						vertical-align: middle;
+						min-width: 70px;
+						width: 70px;
+						text-align: center;
+					}
 
-#form-container .place-of-test-object label input {
-	margin-right: 4px;
-}
+					&:nth-child(3) {
+						vertical-align: middle;
+						min-width: 70px;
+						width: 70px;
+						text-align: center;
+					}
+				}
 
-#form-container .background-disease {
-	margin-bottom: 10px;
-	display: flex;
-}
+				:is(td:nth-child(2), td:nth-child(3)) {
+					text-align: center;
+					vertical-align: middle;
+				}
+			}
 
-#form-container .background-disease-title {
-	margin: 0;
-}
+			:is(td, th) {
+				padding: 15px 10px;
+				border: 1px solid #edeff1;
+			}
 
-#form-container .background-disease label {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	margin-right: 10px;
-}
+			tbody td {
+				font-weight: 500;
+			}
+		}
 
-#form-container .background-disease label input {
-	margin-right: 4px;
-}
+		.more-info {
+			margin-top: 8px;
+		}
+		.captcha-title {
+			margin-top: 5px;
+			font-weight: 700;
+			color: $color-blue;
+		}
 
-#form-container .type-of-background-disease {
-	margin-bottom: 10px;
-}
+		.captcha-code {
+			height: calc(1.5em + 0.5rem + 2px) !important;
+			padding: 0.15rem 0.5rem;
+			color: #393939;
+			width: 200px;
+			margin-top: 20px;
+		}
 
-#form-container .type-of-background-disease-title {
-	margin: 0;
-}
+		.submit-button-center {
+			text-align: center;
 
-#form-container .type-of-background-disease label {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-}
+			button[type='submit'] {
+				all: unset;
+				color: $color-white;
+				background-color: $color-blue;
+				padding: 0.45rem 0.9rem;
+				font-size: 0.9rem;
+				line-height: 1.5;
+				border-radius: 0.15rem;
+				min-width: 100px;
+				width: 30%;
+				margin-bottom: 8px;
+			}
+		}
 
-#form-container .type-of-background-disease input {
-	margin-right: 4px;
-}
+		.type-of-test-object-title {
+			margin: 0;
+		}
 
-#form-container .is-used-molnupiravir-title {
-	margin: 0;
-}
+		.type-of-test-object {
+			display: flex;
+			label {
+				display: flex;
+				margin-right: 10px;
+				margin-bottom: 10px;
+				margin-top: 10px;
+				flex-direction: row;
+				align-items: center;
+			}
+		}
 
-#form-container .is-used-molnupiravir {
-	display: flex;
-	flex-direction: row;
-}
+		.type-of-test-object {
+			display: flex;
+			input {
+				margin-right: 4px;
+			}
+		}
 
-#form-container .is-used-molnupiravir label {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-}
+		.place-of-test-object {
+			margin-bottom: 10px;
 
-#form-container .is-used-molnupiravir label * {
-	margin-right: 4px;
-}
+			label {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				input {
+					margin-right: 4px;
+				}
+			}
+		}
 
-#form-container .used-molnupiravir-title {
-	font-weight: 700;
-	color: $color-blue;
-}
+		.place-of-test-object-title {
+			margin: 0;
+		}
 
-#form-container .list-symptom-after-used-molnupiravir {
-	display: grid;
-	grid-template-columns: 30% 70%;
-	/* width: 60%; */
-}
+		.background-disease {
+			margin-bottom: 10px;
+			display: flex;
 
-#form-container .list-symptom-after-used-molnupiravir label {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-}
+			label {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				margin-right: 10px;
 
-#form-container .list-symptom-after-used-molnupiravir label span {
-	width: 100%;
-}
+				input {
+					margin-right: 4px;
+				}
+			}
+		}
 
-#form-container .list-symptom-after-used-molnupiravir label input {
-	margin-right: 4px;
-}
+		.background-disease-title {
+			margin: 0;
+		}
 
-#form-container .list-symptom-after-used-molnupiravir label input[type='text'] {
-	width: 700%;
+		.type-of-background-disease {
+			margin-bottom: 10px;
+
+			label {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+			}
+
+			input {
+				margin-right: 4px;
+			}
+
+			.type-of-background-disease-title {
+				margin: 0;
+			}
+		}
+
+		.is-used-molnupiravir-title {
+			margin: 0;
+		}
+
+		.is-used-molnupiravir {
+			display: flex;
+			flex-direction: row;
+
+			label {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+			}
+			* {
+				margin-right: 4px;
+			}
+		}
+
+		.used-molnupiravir-title {
+			font-weight: 700;
+			color: $color-blue;
+		}
+
+		.list-symptom-after-used-molnupiravir {
+			display: grid;
+			grid-template-columns: 30% 70%;
+
+			label {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				span {
+					width: 100%;
+				}
+				input {
+					margin-right: 4px;
+				}
+				input[type='text'] {
+					width: 700%;
+				}
+			}
+		}
+	}
 }
