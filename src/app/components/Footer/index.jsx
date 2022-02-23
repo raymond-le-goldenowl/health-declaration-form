@@ -1,7 +1,7 @@
 import React from 'react';
 
 import logoAppKhaiBaoYte from 'app/assets/images/logoAppKhaiBaoYte.png';
-import './styles.css';
+import './styles.scss';
 
 export default function Footer() {
 	return (
