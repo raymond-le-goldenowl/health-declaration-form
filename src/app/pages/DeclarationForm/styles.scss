@@ -1,19 +1,21 @@
+@import '../../../index.scss';
+
 #declaration-form {
 	margin: 10px 0px;
 }
 #declaration-form .title-blue {
 	font-weight: 700;
 	text-align: center;
-	color: var(--color-blue);
+	color: $color-blue;
 }
 
 #declaration-form .title-red {
 	text-align: center;
-	color: var(--color-red);
+	color: $color-red;
 }
 
 .label-red {
-	color: var(--color-red);
+	color: $color-red;
 }
 
 #form-container {
@@ -104,12 +106,12 @@
 
 .disease-symptoms-title {
 	font-weight: 700;
-	color: var(--color-blue);
+	color: $color-blue;
 }
 
 .epidemiological-factors-title {
 	font-weight: 700;
-	color: var(--color-blue);
+	color: $color-blue;
 }
 
 .disease-symptoms-table {
@@ -180,7 +182,7 @@
 .captcha-title {
 	margin-top: 5px;
 	font-weight: 700;
-	color: var(--color-blue);
+	color: $color-blue;
 }
 
 .captcha-code {
@@ -197,8 +199,8 @@
 
 .submit-button-center button[type='submit'] {
 	all: unset;
-	color: var(--color-white);
-	background-color: var(--color-blue);
+	color: $color-white;
+	background-color: $color-blue;
 	padding: 0.45rem 0.9rem;
 	font-size: 0.9rem;
 	line-height: 1.5;
@@ -309,7 +311,7 @@
 
 #form-container .used-molnupiravir-title {
 	font-weight: 700;
-	color: var(--color-blue);
+	color: $color-blue;
 }
 
 #form-container .list-symptom-after-used-molnupiravir {
