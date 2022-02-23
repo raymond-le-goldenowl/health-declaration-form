@@ -6,12 +6,21 @@
 
 @import '../../../index.scss';
 
+.link-text {
+	margin-left: 0.375rem;
+}
+
+a {
+	color: $color-gray;
+}
+
 .app-bar-wrapper {
 	background-color: $color-blue;
 	.app-bar {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
+		justify-content: space-between;
+
 		padding: 0.4rem 1rem;
 		transition: all 0.4s;
 
@@ -27,23 +36,17 @@
 			height: 50px;
 		}
 
-		.topnav-menu svg {
-			font-size: 1.9rem;
-			fill: $color-white;
-			font-weight: 900;
-			cursor: pointer;
-
-			.path {
+		.topnav-menu {
+			svg {
+				font-size: 1.9rem;
+				fill: $color-white;
 				font-weight: 900;
+				cursor: pointer;
+
+				.path {
+					font-weight: 900;
+				}
 			}
-		}
-
-		.link-text {
-			margin-left: 0.375rem;
-		}
-
-		a {
-			color: $color-gray;
 		}
 	}
 }
@@ -51,22 +54,24 @@
 /* ########### RESPONSIVE ########### */
 
 @media screen and (min-width: 1050px) {
-	.app-bar {
-		.logo-sm img {
-			display: none;
-		}
+	.app-bar-wrapper {
+		.app-bar {
+			.logo-sm img {
+				display: none;
+			}
 
-		.logo-box a.logo-lg span {
-			display: inline-block;
-			-webkit-line-clamp: 1;
-			-webkit-box-orient: vertical;
-			overflow: hidden;
-			padding-left: 15px;
-			line-height: 1.7;
-			font-size: 1.125rem;
-			text-transform: uppercase;
-			font-weight: 600;
-			color: $color-white;
+			.logo-box a.logo-lg span {
+				display: inline-block;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+				padding-left: 15px;
+				line-height: 1.7;
+				font-size: 1.125rem;
+				text-transform: uppercase;
+				font-weight: 600;
+				color: $color-white;
+			}
 		}
 	}
 }
