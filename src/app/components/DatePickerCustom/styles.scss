@@ -4,13 +4,16 @@
 * *********** Component: DatePickerCustom *********** *
 */
 
-/* Update color for selection day */
-.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
-	background-color: var(--color-teal);
-}
+@import '../../../index.scss';
 
-.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
-	border-color: var(--color-teal);
+/* Update color for selection day */
+.ant-picker-cell-in-view {
+	.ant-picker-cell-selected .ant-picker-cell-inner {
+		background-color: $color-teal;
+	}
+	.ant-picker-cell-today .ant-picker-cell-inner::before {
+		border-color: $color-teal;
+	}
 }
 
 /* Create triangle */
