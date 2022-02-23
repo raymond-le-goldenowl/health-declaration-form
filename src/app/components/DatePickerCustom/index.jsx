@@ -5,7 +5,7 @@ import viVN from 'antd/lib/locale/vi_VN';
 import { DatePicker, ConfigProvider } from 'antd';
 
 import { DATE_FORMAT, MONTHS, WEEKS } from './constants';
-import './styles.css';
+import './styles.scss';
 
 // custom local days on a week and months on a year.
 moment.updateLocale('vn', {
