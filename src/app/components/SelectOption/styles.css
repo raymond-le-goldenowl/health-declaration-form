@@ -59,7 +59,6 @@ span.anticon.anticon-search.ant-select-suffix.pos-anticon-search {
 }
 
 .select_option-custom .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
-	margin: 20px 0;
 	height: 35px;
 	display: flex;
 	align-items: center;
