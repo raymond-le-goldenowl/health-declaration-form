@@ -1,0 +1,76 @@
+/* 
+* *********** Authors: Raymond ************ *
+* *********** Created at: 19/1/2022 ******* *
+* *********** Global ********************** *
+*/
+
+$color-blue: #0156c1;
+$color-red: red;
+$color-gray: #6c757d;
+$color-black: black;
+$color-white: white;
+
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+		'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* ERROR CUSTOM */
+.notification-custom {
+	&.ant-notification-notice-closable {
+		margin: 0;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 5px 20px;
+	}
+
+	&.ant-notification-notice-error.ant-notification-notice-closable {
+		background-color: #fbcfd6;
+	}
+
+	/* notice content */
+	&.ant-notification-notice-closable {
+		.ant-notification-notice-message {
+			margin-left: 0;
+			font-weight: 500;
+			color: #7d2c38;
+			margin: 0;
+		}
+		.ant-notification-notice-close {
+			position: relative;
+			inset: 0;
+			display: inline-block;
+
+			/* icon close notification*/
+			&::before {
+				content: '×';
+				font-size: 2em;
+			}
+      
+			/* hide x icon */
+			svg {
+				display: none;
+			}
+		}
+	}
+}
+
+/* hide default icon */
+.notification-custom {
+	.anticon.ant-notification-notice-icon {
+		display: none;
+	}
+
+	/* ant-notification-notice-description */
+	.ant-notification-notice-with-icon .ant-notification-notice-description {
+		margin: 0 10px 0 0;
+	}
+}
