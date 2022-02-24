@@ -11,7 +11,7 @@ import { notificationCustom } from 'app/utils/notificationCustom';
 import { DATE_FORMAT } from 'app/components/DatePickerCustom/constants';
 
 import Footer from 'app/components/Footer';
-import SelectOption from 'app/components/SelectOption';
+import SelectOption from 'app/components/Select';
 import DatePickerCustom from 'app/components/DatePickerCustom';
 
 import './styles.scss';

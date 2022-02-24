@@ -5,7 +5,7 @@ import './styles.scss';
 
 const { Option } = AntSelect;
 
-export default function SelectOption({
+export default function Select({
 	options,
 	getValueSelected,
 	width,
