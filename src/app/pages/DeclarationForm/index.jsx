@@ -39,7 +39,7 @@ export default function DeclarationForm() {
 	const [backgroundDisease, setBackgroundDisease] = useState('no');
 	const [isUsedMolnupiravir, setIsUsedMolnupiravir] = useState('no');
 	const [isError, setIsError] = useState(false);
-	const codeRef = useRef();
+	const codeRef = useRef(makeCaptchaNumbers());
 
 	useEffect(() => {
 		const diseaseSymptomsUrl = `https://kbyt.khambenh.gov.vn/api/v1/trieuchung?q={%22filters%22:{%22$and%22:[{%22trangthai%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22thutu_uutien%22,%22direction%22:%22asc%22}]}`;
@@ -723,9 +723,7 @@ export default function DeclarationForm() {
 					<div className='captcha-title'>
 						Vui lòng nhập mã xác thực <span className='label-red'> (*)</span>:
 					</div>
-					<div ref={codeRef} className='captcha-text'>
-						{makeCaptchaNumbers()}
-					</div>
+					<div className='captcha-text'>{codeRef.current}</div>
 					<Input
 						type='number'
 						className='captcha-code'
