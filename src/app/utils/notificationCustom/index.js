@@ -28,11 +28,8 @@ const notificationCustom = (
 			]({
 				placement: config.placement || 'topRight',
 				duration: config.duration || 3,
-				message: config.message || 'Notification Title',
-				description:
-					String(config.description).trim().length > 0
-						? config.description
-						: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+				message: config.message,
+				description: config.description,
 				className: 'notification-custom',
 				style: config.styles || ''
 			});
