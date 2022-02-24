@@ -38,7 +38,6 @@ export default function DeclarationForm() {
 	const [typeOfTestObject, setTypeOfTestObject] = useState('no');
 	const [backgroundDisease, setBackgroundDisease] = useState('no');
 	const [isUsedMolnupiravir, setIsUsedMolnupiravir] = useState('no');
-	const [isError, setIsError] = useState(false);
 	const codeRef = useRef(makeCaptchaNumbers());
 
 	useEffect(() => {
@@ -147,56 +146,58 @@ export default function DeclarationForm() {
 	};
 
 	const validate = values => {
-		if (values.diaChi) {
+		if (values.noiKhaiBao === null) {
+			notificationCustom({ type: 'warning', message: 'Chưa chọn nơi khai báo.' });
+			return false;
+		} else if (values.diaChi === null) {
 			notificationCustom({ type: 'warning', message: 'Chưa nhập địa chỉ.' });
-			setIsError(true);
-		} else if (values.gioiTinh) {
+			return false;
+		} else if (values.gioiTinh === null) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn giới tính.' });
-			setIsError(true);
+			return false;
 		} else if (values.namSinh) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn năm sinh.' });
-			setIsError(true);
-		} else if (values.quanHuyen) {
+			return false;
+		} else if (values.quanHuyen === null) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn quận huyện.' });
-			setIsError(true);
-		} else if (values.soDienThoai) {
+			return false;
+		} else if (values.soDienThoai === null) {
 			notificationCustom({ type: 'warning', message: 'Chưa nhập số điện thoại.' });
-			setIsError(true);
-		} else if (values.ten) {
+			return false;
+		} else if (values.ten === null) {
 			notificationCustom({ type: 'warning', message: 'Chưa nhập tên.' });
-			setIsError(true);
-		} else if (values.tinhThanh) {
+			return false;
+		} else if (values.tinhThanh === null) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn tỉnh thành.' });
-			setIsError(true);
-		} else if (values.xaPhuong) {
+			return false;
+		} else if (values.xaPhuong === null) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn xã phường.' });
-			setIsError(true);
-		} else {
-			setIsError(false);
+			return false;
 		}
+		return true;
 	};
 	const formik = useFormik({
 		initialValues: {
-			diaChi: '',
+			diaChi: null,
 			gioiTinh: 'Nam',
-			khoaPhong: '',
-			maBenhNhan: '',
-			maSinhVien: '',
+			khoaPhong: null,
+			maBenhNhan: null,
+			maSinhVien: null,
 			namSinh: moment(moment(moment()._d).format(DATE_FORMAT), DATE_FORMAT),
-			noiTru: '',
+			noiTru: null,
 			quanHuyen: null,
-			quocTichID: '',
-			soDienThoai: '',
-			ten: '',
+			quocTichID: null,
+			soDienThoai: null,
+			ten: null,
 			tinhThanh: null,
-			xaPhuong: null
+			xaPhuong: null,
+			noiKhaiBao: null
 		},
 		onSubmit: values => {
-			validate(values);
-			if (isError === false) {
-				console.log(values);
+			if (validate(values)) {
+				delete values.noiKhaiBao;
 				localStorage.setItem('info', JSON.stringify(values));
-				localStorage.setItem(values.soDienThoai, values);
+				localStorage.setItem(values.soDienThoai, JSON.stringify(values));
 			}
 		}
 	});
@@ -248,6 +249,9 @@ export default function DeclarationForm() {
 							width={'100%'}
 							placeholder={'Nhập và chọn nơi khai báo'}
 							options={declarationPlaces}
+							getValueSelected={value => {
+								formik.setFieldValue('noiKhaiBao', value);
+							}}
 						/>
 					</label>
 				</div>
