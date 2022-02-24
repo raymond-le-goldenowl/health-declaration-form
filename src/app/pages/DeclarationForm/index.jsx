@@ -157,7 +157,7 @@ export default function DeclarationForm() {
 		} else if (values.gioiTinh === null) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn giới tính.' });
 			return false;
-		} else if (values.namSinh) {
+		} else if (values.namSinh === null) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn năm sinh.' });
 			return false;
 		} else if (values.quanHuyen === null) {
@@ -175,6 +175,9 @@ export default function DeclarationForm() {
 		} else if (values.xaPhuong === null) {
 			notificationCustom({ type: 'warning', message: 'Chưa chọn xã phường.' });
 			return false;
+		} else if (codeRef.current !== captchaText) {
+			notificationCustom({ type: 'warning', message: 'Mã xác thực không đúng.' });
+			return false;
 		}
 		return true;
 	};
@@ -185,7 +188,7 @@ export default function DeclarationForm() {
 			khoaPhong: null,
 			maBenhNhan: null,
 			maSinhVien: null,
-			namSinh: moment(moment(moment()._d).format(DATE_FORMAT), DATE_FORMAT),
+			namSinh: null,
 			noiTru: null,
 			quanHuyen: null,
 			quocTichID: null,
