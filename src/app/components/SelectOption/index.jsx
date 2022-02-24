@@ -11,7 +11,8 @@ export default function SelectOption({
 	width,
 	placeholder,
 	defaultValue = '',
-	disabled = false
+	disabled = false,
+	value
 }) {
 	const [isArrowUp, setIsArrowUp] = useState(false);
 
@@ -38,6 +39,7 @@ export default function SelectOption({
 				}
 				defaultValue={defaultValue || null}
 				disabled={disabled}
+				value={value}
 			>
 				{options &&
 					options.map(option => (

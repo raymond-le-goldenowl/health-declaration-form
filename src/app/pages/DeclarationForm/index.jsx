@@ -82,6 +82,8 @@ export default function DeclarationForm() {
 					value: district.ten,
 					text: district.ten
 				}));
+
+				setDistricts(null);
 				setDistricts(data);
 			});
 		}
@@ -261,12 +263,7 @@ export default function DeclarationForm() {
 						<span>
 							Số điện thoại <span className='label-red'> (*)</span>:
 						</span>
-						<Input
-							type='number'
-							// value={soDienThoai}
-							// onChange={({ target }) => setSoDienThoai(target.value)}
-							{...formik.getFieldProps('soDienThoai')}
-						/>
+						<Input type='number' {...formik.getFieldProps('soDienThoai')} />
 					</label>
 				</div>
 
@@ -356,7 +353,6 @@ export default function DeclarationForm() {
 								width={'100'}
 								options={nations}
 								defaultValue={'Việt Nam'}
-								// getValueSelected={setQuocTichID}
 								getValueSelected={value => {
 									formik.setFieldValue('quocTichID', value);
 								}}
@@ -378,10 +374,11 @@ export default function DeclarationForm() {
 								placeholder={'Tỉnh thành'}
 								width={'100'}
 								options={provinces}
-								// getValueSelected={setProvinceSelected}
 								getValueSelected={value => {
 									setProvinceSelected(value);
 									formik.setFieldValue('tinhThanh', value);
+									formik.setFieldValue('quanHuyen', null);
+									formik.setFieldValue('xaPhuong', null);
 								}}
 							/>
 						</label>
@@ -402,10 +399,11 @@ export default function DeclarationForm() {
 								placeholder={'Quận huyện'}
 								width={'100'}
 								options={districts}
-								// getValueSelected={setDistrictSelected}
+								value={formik.values.quanHuyen}
 								getValueSelected={value => {
 									setDistrictSelected(value);
 									formik.setFieldValue('quanHuyen', value);
+									formik.setFieldValue('xaPhuong', null);
 								}}
 							/>
 						</label>
@@ -426,7 +424,7 @@ export default function DeclarationForm() {
 								placeholder={'Xã phường'}
 								width={'100'}
 								options={wards}
-								// getValueSelected={setXaPhuong}
+								value={formik.values.xaPhuong}
 								getValueSelected={value => {
 									formik.setFieldValue('xaPhuong', value);
 								}}
