@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import axios from 'axios';
-import moment from 'moment';
 import { useFormik } from 'formik';
 import { Col, Input, Row } from 'antd';
 import { SyncOutlined } from '@ant-design/icons/lib/icons';
 
 import { declarationTypes } from 'app/services';
 import { notificationCustom } from 'app/utils/notificationCustom';
-import { DATE_FORMAT } from 'app/components/DatePickerCustom/constants';
 
 import Footer from 'app/components/Footer';
 import SelectOption from 'app/components/Select';
