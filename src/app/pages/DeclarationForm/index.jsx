@@ -147,34 +147,34 @@ export default function DeclarationForm() {
 
 	const validate = values => {
 		if (values.noiKhaiBao === null) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn nơi khai báo.' });
+			notificationCustom({ type: 'danger', message: 'Chưa chọn nơi khai báo.' });
 			return false;
 		} else if (values.diaChi === null) {
-			notificationCustom({ type: 'warning', message: 'Chưa nhập địa chỉ.' });
+			notificationCustom({ type: 'danger', message: 'Chưa nhập địa chỉ.' });
 			return false;
 		} else if (values.gioiTinh === null) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn giới tính.' });
+			notificationCustom({ type: 'danger', message: 'Chưa chọn giới tính.' });
 			return false;
 		} else if (values.namSinh === null) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn năm sinh.' });
+			notificationCustom({ type: 'danger', message: 'Chưa chọn năm sinh.' });
 			return false;
 		} else if (values.quanHuyen === null) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn quận huyện.' });
+			notificationCustom({ type: 'danger', message: 'Chưa chọn quận huyện.' });
 			return false;
 		} else if (values.soDienThoai === null) {
-			notificationCustom({ type: 'warning', message: 'Chưa nhập số điện thoại.' });
+			notificationCustom({ type: 'danger', message: 'Chưa nhập số điện thoại.' });
 			return false;
 		} else if (values.ten === null) {
-			notificationCustom({ type: 'warning', message: 'Chưa nhập tên.' });
+			notificationCustom({ type: 'danger', message: 'Chưa nhập tên.' });
 			return false;
 		} else if (values.tinhThanh === null) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn tỉnh thành.' });
+			notificationCustom({ type: 'danger', message: 'Chưa chọn tỉnh thành.' });
 			return false;
 		} else if (values.xaPhuong === null) {
-			notificationCustom({ type: 'warning', message: 'Chưa chọn xã phường.' });
+			notificationCustom({ type: 'danger', message: 'Chưa chọn xã phường.' });
 			return false;
 		} else if (codeRef.current !== captchaText) {
-			notificationCustom({ type: 'warning', message: 'Mã xác thực không đúng.' });
+			notificationCustom({ type: 'danger', message: 'Mã xác thực không đúng.' });
 			return false;
 		}
 		return true;
