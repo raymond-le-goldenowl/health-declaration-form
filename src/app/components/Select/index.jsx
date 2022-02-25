@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import './styles.scss';
 
-const { Option } = AntSelect;
+const AntSelectOption = AntSelect.Option;
 
 export default function Select({
 	options,
@@ -43,9 +43,13 @@ export default function Select({
 			>
 				{options &&
 					options.map(option => (
-						<Option key={option.key} value={JSON.stringify(option)} style={{ fontSize: '1rem' }}>
+						<AntSelectOption
+							key={option.key}
+							value={JSON.stringify(option)}
+							style={{ fontSize: '1rem' }}
+						>
 							{option.text}
-						</Option>
+						</AntSelectOption>
 					))}
 			</AntSelect>
 			<span
