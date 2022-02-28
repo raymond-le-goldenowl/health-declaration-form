@@ -132,7 +132,6 @@
 						min-width: 70px;
 						width: 70px;
 					}
-					
 				}
 				:is(td:nth-child(2), td:nth-child(3)) {
 					text-align: center;
@@ -337,13 +336,19 @@
 				span {
 					width: 100%;
 				}
+				&:last-child {
+					span {
+						width: 20%;
+					}
+				}
 
 				input {
 					margin-right: 8px;
 				}
 
 				input[type='text'] {
-					width: 700%;
+					flex: auto;
+          margin-bottom: 0;
 				}
 			}
 		}
