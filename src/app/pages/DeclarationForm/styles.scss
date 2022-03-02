@@ -20,7 +20,8 @@
 	// * Good here * //
 
 	#form-container {
-		width: 65%;
+    max-width: 65%;
+    min-width: 460px;
 
 		overflow: hidden;
 		margin: 0 auto;
@@ -30,7 +31,6 @@
 		background-clip: border-box;
 		border: 1px solid #e7eaed;
 		border-radius: 0.25rem;
-		min-width: 0;
 		word-wrap: break-word;
 
 		// * Good here * //
@@ -85,7 +85,7 @@
 			}
 
 			.btn-reset-data-wrapper {
-				flex: 2;
+				flex: 3;
 				display: flex;
 				justify-content: flex-end;
 				align-items: flex-end;
