@@ -11,7 +11,7 @@ import './styles.scss';
 export default function AppBar() {
 	return (
 		<div className='app-bar-wrapper'>
-			<div className='container app-bar'>
+			<div className='app-bar'>
 				<div className='logo-box'>
 					<a href='#!'>
 						<img src={imageLogoBoYTe} alt={`Logo`} height={45} />
