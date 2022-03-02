@@ -6,12 +6,14 @@
 	.title-blue {
 		font-weight: 700;
 		text-align: center;
+		margin: .2em 20px .4em 20px;
 		color: $color-blue;
 	}
 
 	.title-red {
 		text-align: center;
 		color: $color-red;
+		margin: 0 20px 2em 20px;
 	}
 	.label-red {
 		color: $color-red;
@@ -20,8 +22,8 @@
 	// * Good here * //
 
 	#form-container {
-    max-width: 65%;
-    min-width: 460px;
+		max-width: 70%;
+		min-width: 460px;
 
 		overflow: hidden;
 		margin: 0 auto;
@@ -32,6 +34,11 @@
 		border: 1px solid #e7eaed;
 		border-radius: 0.25rem;
 		word-wrap: break-word;
+
+		@media screen and (max-width: 1600px) {
+			max-width: 85%;
+			transition: all 0.3s;
+		}
 
 		// * Good here * //
 
@@ -85,7 +92,7 @@
 			}
 
 			.btn-reset-data-wrapper {
-				flex: 3;
+				flex: 4;
 				display: flex;
 				justify-content: flex-end;
 				align-items: flex-end;
@@ -348,7 +355,7 @@
 
 				input[type='text'] {
 					flex: auto;
-          margin-bottom: 0;
+					margin-bottom: 0;
 				}
 			}
 		}
