@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import axios from 'axios';
+import { nanoid } from 'nanoid';
 import { useFormik } from 'formik';
 import { Col, Input, Row } from 'antd';
 import { SyncOutlined } from '@ant-design/icons/lib/icons';
@@ -38,9 +39,24 @@ export default function DeclarationForm() {
 	// các dấu hiệu dịch tễ.
 	const [epidemiologicalFactors, setEpidemiologicalFactors] = useState([]);
 
-	const [typeOfTestObject, setTypeOfTestObject] = useState('no');
-	const [backgroundDisease, setBackgroundDisease] = useState('no');
-	const [isUsedMolnupiravir, setIsUsedMolnupiravir] = useState('no');
+	// symptom-after-used-molnupiravir
+	const symptomAfterUsedMolnupiravir = useRef([
+		{ id: nanoid(3), content: 'Không', isChecked: false },
+		{ id: nanoid(3), content: 'Nôn', isChecked: false },
+		{ id: nanoid(3), content: 'Chóng mặt', isChecked: false },
+		{ id: nanoid(3), content: 'Đau bụng', isChecked: false },
+		{ id: nanoid(3), content: 'Đau tay chân', isChecked: false },
+		{ id: nanoid(3), content: 'Buồn nôn', isChecked: false },
+		{ id: nanoid(3), content: 'Tê tay chân', isChecked: false },
+		{ id: nanoid(3), content: 'Nổi sần ngứa', isChecked: false },
+		{ id: nanoid(3), content: 'Đau đầu', isChecked: false },
+		{ id: nanoid(3), content: 'Đau lưng', isChecked: false },
+		{ id: nanoid(3), content: 'Sổ mũi', isChecked: false },
+		{ id: nanoid(3), content: 'Tiêu chảy', isChecked: false },
+		{ id: nanoid(3), content: 'Yếu liệt tay chân', isChecked: false }
+	]);
+	const [isBackgroundDisease, setIsBackgroundDisease] = useState('Không');
+	const [isUsedMolnupiravir, setIsUsedMolnupiravir] = useState('Không');
 	const [isDisableSymptomsAfterUsedMolnupiravir, setIsDisableSymptomsAfterUsedMolnupiravir] =
 		useState(false);
 
@@ -107,16 +123,32 @@ export default function DeclarationForm() {
 			xaPhuong: null,
 
 			noiKhaiBao: null,
-			loaiKhaiBao: null
+			loaiKhaiBao: null,
+
+			// Chỉnh dành cho loại khai báo cuối và khai báo gần cuối.
+			typeOfTestObject: 'Không',
+			declarationPlace: null,
+
+			// Chỉnh dành cho loại khai báo cuối.
+			backgroundDisease: [],
+
+			SymptomsAfterUsedMolnupiravir: [],
+			anotherSymptoms: null,
+
+			bodyTemperature: null,
+			bloodOxygenLevel: null
 		},
 		onSubmit: values => {
-			if (validate(values)) {
-				delete values.noiKhaiBao;
-				delete values.loaiKhaiBao;
-				// Save on localStorage
-				localStorage.setItem('info', JSON.stringify(values));
-				localStorage.setItem(values.soDienThoai, JSON.stringify(values));
-			}
+			// if (validate(values)) {
+			delete values.noiKhaiBao;
+			delete values.loaiKhaiBao;
+
+			console.log(values);
+
+			// Save on localStorage
+			localStorage.setItem('info', JSON.stringify(values));
+			localStorage.setItem(values.soDienThoai, JSON.stringify(values));
+			// }
 		}
 	});
 
@@ -131,12 +163,25 @@ export default function DeclarationForm() {
 			.get(epidemiologicalFactorsUrl)
 			.then(resp => setEpidemiologicalFactors(resp.data?.objects || []));
 		axios.get(nationUrl).then(resp => {
-			const data = resp.data?.objects.map(nation => ({
-				id: nation.id,
-				key: nation.id,
-				value: nation.ten,
-				text: nation.ten
-			}));
+			const data = resp.data?.objects.map(nation => {
+				if (nation.ma === 'VN' && nation.tenkhongdau === 'viet nam') {
+					formik.setFieldValue(
+						'quocTich',
+						JSON.stringify({
+							id: nation.id,
+							key: nation.id,
+							value: nation.ten,
+							text: nation.ten
+						})
+					);
+				}
+				return {
+					id: nation.id,
+					key: nation.id,
+					value: nation.ten,
+					text: nation.ten
+				};
+			});
 			setNations(data);
 		});
 		axios.get(provincesUrl).then(resp => {
@@ -234,9 +279,13 @@ export default function DeclarationForm() {
 
 	const onChangeSymptomAfterUsedMolnupiravir = ({ target }) => {
 		if (target.value.trim().toLowerCase() === 'không') {
+			formik.values.SymptomsAfterUsedMolnupiravir = [];
 			setIsDisableSymptomsAfterUsedMolnupiravir(target.checked);
+		} else {
+			formik.values.SymptomsAfterUsedMolnupiravir.push(target.value);
 		}
 	};
+
 	return (
 		<div id='declaration-form'>
 			<h2 className='title-blue'>SỞ Y TẾ TP. HỒ CHÍ MINH</h2>
@@ -482,7 +531,7 @@ export default function DeclarationForm() {
 								<input
 									type='radio'
 									name='type-of-test-object'
-									onChange={() => setTypeOfTestObject('no')}
+									onChange={() => formik.setFieldValue('typeOfTestObject', 'Không')}
 								/>
 								<span>Không</span>
 							</label>
@@ -491,7 +540,7 @@ export default function DeclarationForm() {
 								<input
 									type='radio'
 									name='type-of-test-object'
-									onChange={() => setTypeOfTestObject('yes')}
+									onChange={() => formik.setFieldValue('typeOfTestObject', 'Có')}
 								/>
 								<span>Có</span>
 							</label>
@@ -500,7 +549,7 @@ export default function DeclarationForm() {
 								<input
 									type='radio'
 									name='type-of-test-object'
-									onChange={() => setTypeOfTestObject('F1')}
+									onChange={() => formik.setFieldValue('typeOfTestObject', 'F1')}
 								/>
 								<span>F1</span>
 							</label>
@@ -510,24 +559,46 @@ export default function DeclarationForm() {
 
 				{(formik.values.loaiKhaiBao === declarationTypes[4].value ||
 					formik.values.loaiKhaiBao === declarationTypes[5].value) &&
-				typeOfTestObject === 'yes' ? (
+				formik.values.typeOfTestObject.trim().toLowerCase() === 'có' ? (
 					<>
 						<p className='place-of-test-object-title'>Nơi xét nghiệm:</p>
 						<div className='place-of-test-object'>
 							<label>
-								<input type='radio' name='place-of-test-object' />
+								<input
+									type='radio'
+									name='declarationPlace'
+									checked={formik.values.declarationPlace === 'Bệnh viện'}
+									onChange={() => formik.setFieldValue('declarationPlace', 'Bệnh viện')}
+								/>
 								<span>Bệnh viện</span>
 							</label>
 							<label>
-								<input type='radio' name='place-of-test-object' />
-								<span>Phòng khám tư nhâm</span>
+								<input
+									type='radio'
+									name='declarationPlace'
+									checked={formik.values.declarationPlace === 'Phòng khám tư nhân'}
+									onChange={() => formik.setFieldValue('declarationPlace', 'Phòng khám tư nhân')}
+								/>
+								<span>Phòng khám tư nhân</span>
 							</label>
 							<label>
-								<input type='radio' name='place-of-test-object' />
+								<input
+									type='radio'
+									name='declarationPlace'
+									checked={formik.values.declarationPlace === 'Khu phong tỏa'}
+									onChange={() => formik.setFieldValue('declarationPlace', 'Khu phong tỏa')}
+								/>
 								<span>Khu phong tỏa</span>
 							</label>
 							<label>
-								<input type='radio' name='place-of-test-object' />
+								<input
+									type='radio'
+									name='declarationPlace'
+									checked={formik.values.declarationPlace === 'Tự làm xét nghiệm tại nhà'}
+									onChange={() =>
+										formik.setFieldValue('declarationPlace', 'Tự làm xét nghiệm tại nhà')
+									}
+								/>
 								<span>Tự làm xét nghiệm tại nhà</span>
 							</label>
 						</div>
@@ -542,7 +613,7 @@ export default function DeclarationForm() {
 								<input
 									type='radio'
 									name='background-disease'
-									onChange={() => setBackgroundDisease('no')}
+									onChange={() => setIsBackgroundDisease('Không')}
 								/>
 								<span>Không</span>
 							</label>
@@ -551,7 +622,7 @@ export default function DeclarationForm() {
 								<input
 									type='radio'
 									name='background-disease'
-									onChange={() => setBackgroundDisease('yes')}
+									onChange={() => setIsBackgroundDisease('Có')}
 								/>
 								<span>Có</span>
 							</label>
@@ -560,29 +631,59 @@ export default function DeclarationForm() {
 				) : null}
 				{formik.values.loaiKhaiBao &&
 				formik.values.loaiKhaiBao === declarationTypes[5].value &&
-				backgroundDisease &&
-				backgroundDisease === 'yes' ? (
+				isBackgroundDisease &&
+				isBackgroundDisease === 'Có' ? (
 					<>
 						<p className='type-of-background-disease-title'>Chọn bệnh nền: </p>
 						<div className='type-of-background-disease'>
 							<label>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									onChange={({ target }) => {
+										formik.values.backgroundDisease.push(target.value);
+									}}
+									value='Thận mạn tính'
+								/>
 								<span>Thận mạn tính</span>
 							</label>
 							<label>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									onChange={({ target }) => {
+										formik.values.backgroundDisease.push(target.value);
+									}}
+									value='Tăng huyết áp'
+								/>
 								<span>Tăng huyết áp</span>
 							</label>
 							<label>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									onChange={({ target }) => {
+										formik.values.backgroundDisease.push(target.value);
+									}}
+									value='Đái tháo đường'
+								/>
 								<span>Đái tháo đường</span>
 							</label>
 							<label>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									onChange={({ target }) => {
+										formik.values.backgroundDisease.push(target.value);
+									}}
+									value='Bệnh phổi tắc nghẽn mạn tính'
+								/>
 								<span>Bệnh phổi tắc nghẽn mạn tính</span>
 							</label>
 							<label>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									onChange={({ target }) => {
+										formik.values.backgroundDisease.push(target.value);
+									}}
+									value='Có tình trạng béo phì'
+								/>
 								<span>Có tình trạng béo phì</span>
 							</label>
 						</div>
@@ -624,48 +725,34 @@ export default function DeclarationForm() {
 							<span className='label-red'> (*)</span>:
 						</div>
 						<div className='list-symptom-after-used-molnupiravir'>
-							{[
-								'Không',
-								'Nôn',
-								'Chóng mặt',
-								'Đau bụng',
-								'Đau tay chân',
-								'Buồn nôn',
-								'Tê tay chân',
-								'Nổi sần ngứa',
-								'Đau đầu',
-								'Đau lưng',
-								'Sổ mũi',
-								'Tiêu chảy',
-								'Yếu liệt tay chân',
-								'Triệu chứng khác'
-							].map((item, index, oldArray) => {
-								if (oldArray.length - 1 === index) {
-									return (
-										<label key={new Date() + Math.random()}>
-											<span>Triệu chứng khác:</span>
-											<Input type='text' disabled={isDisableSymptomsAfterUsedMolnupiravir} />
-										</label>
-									);
-								} else {
-									return (
-										<label key={new Date() + Math.random()}>
-											<input
-												type='checkbox'
-												value={item}
-												onChange={onChangeSymptomAfterUsedMolnupiravir}
-												disabled={item === 'Không' ? false : isDisableSymptomsAfterUsedMolnupiravir}
-												checked={
-													isDisableSymptomsAfterUsedMolnupiravir && item === 'Không'
-														? isDisableSymptomsAfterUsedMolnupiravir
-														: null
-												}
-											/>
-											<span>{item}</span>
-										</label>
-									);
-								}
+							{symptomAfterUsedMolnupiravir.current.map((item, index, oldArray) => {
+								return (
+									<label key={item.id}>
+										<input
+											type='checkbox'
+											value={item.content}
+											onChange={onChangeSymptomAfterUsedMolnupiravir}
+											disabled={
+												item.content === 'Không' ? false : isDisableSymptomsAfterUsedMolnupiravir
+											}
+											checked={
+												isDisableSymptomsAfterUsedMolnupiravir && item.content === 'Không'
+													? isDisableSymptomsAfterUsedMolnupiravir
+													: null
+											}
+										/>
+										<span>{item.content}</span>
+									</label>
+								);
 							})}
+							<label>
+								<span>Triệu chứng khác:</span>
+								<Input
+									type='text'
+									disabled={isDisableSymptomsAfterUsedMolnupiravir}
+									{...formik.getFieldProps('anotherSymptoms')}
+								/>
+							</label>
 						</div>
 					</div>
 				) : null}
@@ -676,14 +763,22 @@ export default function DeclarationForm() {
 							<Col className='gutter-row' span={12}>
 								<label>
 									<span>Nhiệt độ cơ thể(ºC) :</span>
-									<Input type='text' placeholder='VD: 38.5' />
+									<Input
+										type='text'
+										placeholder='VD: 38.5'
+										{...formik.getFieldProps('bodyTemperature')}
+									/>
 								</label>
 							</Col>
 
 							<Col className='gutter-row' span={12}>
 								<label>
 									<span>Nồng độ oxy trong máu SPO2 (%) :</span>
-									<Input type='text' placeholder='Nhập giá trị từ 30 -> 100 ' />
+									<Input
+										type='text'
+										placeholder='Nhập giá trị từ 30 -> 100 '
+										{...formik.getFieldProps('bloodOxygenLevel')}
+									/>
 								</label>
 							</Col>
 						</Row>
