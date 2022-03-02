@@ -139,16 +139,24 @@ export default function DeclarationForm() {
 			bloodOxygenLevel: null
 		},
 		onSubmit: values => {
-			// if (validate(values)) {
-			delete values.noiKhaiBao;
-			delete values.loaiKhaiBao;
+			if (validate(values)) {
+				// values will not save on local storage
+				delete values.noiKhaiBao;
+				delete values.loaiKhaiBao;
+				delete values.typeOfTestObject.bloodOxygenLevel;
+				delete values.declarationPlace.bloodOxygenLevel;
+				delete values.backgroundDisease.bloodOxygenLevel;
+				delete values.SymptomsAfterUsedMolnupiravir.bloodOxygenLevel;
+				delete values.anotherSymptoms.bloodOxygenLevel;
+				delete values.bodyTemperature.bloodOxygenLevel;
+				delete values.bloodOxygenLevel;
 
-			console.log(values);
+				// Save to localStorage
+				localStorage.setItem('info', JSON.stringify(values));
+				localStorage.setItem(values.soDienThoai, JSON.stringify(values));
 
-			// Save on localStorage
-			localStorage.setItem('info', JSON.stringify(values));
-			localStorage.setItem(values.soDienThoai, JSON.stringify(values));
-			// }
+				// Save to database.
+			}
 		}
 	});
 
@@ -773,7 +781,7 @@ export default function DeclarationForm() {
 
 							<Col className='gutter-row' span={12}>
 								<label>
-									<span>Nồng độ oxy trong máu SPO2 (%) :</span>
+									<span>Nồng độ SPO2 (%) :</span>
 									<Input
 										type='text'
 										placeholder='Nhập giá trị từ 30 -> 100 '
