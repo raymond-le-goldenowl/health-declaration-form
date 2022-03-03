@@ -106,7 +106,7 @@ export default function DeclarationForm() {
 			houseNumber: null,
 			sex: 'Nam',
 			department: null,
-			patientCode: 0,
+			patientCode: null,
 			idCardNumber: null,
 			dateOfBirth: null,
 			boarding: null,
