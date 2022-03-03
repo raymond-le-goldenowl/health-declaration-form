@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { Col, Input, Modal, Row } from 'antd';
 import { SyncOutlined } from '@ant-design/icons/lib/icons';
 
-import { declarationTypes } from 'app/services';
+import { ORIGIN_URL } from 'app/config/http-links';
 import { notificationCustom } from 'app/utils/notificationCustom';
 
 import Footer from 'app/components/Footer';
@@ -14,7 +14,6 @@ import SelectOption from 'app/components/Select';
 import DatePickerCustom from 'app/components/DatePickerCustom';
 
 import './styles.scss';
-import { ORIGIN_URL } from 'app/config/http-links';
 
 const makeCaptchaNumbers = (min = 1000, max = 99999) => {
 	return Math.floor(Math.random() * (max - min) + min);
@@ -29,7 +28,7 @@ export default function DeclarationForm() {
 	const [districts, setDistricts] = useState([]);
 
 	const [declarationPlaces, setDeclarationPlaces] = useState([]);
-	const [stateDeclarationTypes, setStateDeclarationTypes] = useState(() => declarationTypes || []);
+	const [stateDeclarationTypes, setStateDeclarationTypes] = useState([]);
 
 	// symptom-after-used-molnupiravir
 	const symptomAfterUsedMolnupiravir = useRef([
@@ -87,7 +86,7 @@ export default function DeclarationForm() {
 			return false;
 		} else if (
 			values.idCardNumber === null &&
-			formik.values.declarationType === declarationTypes[5].value
+			formik.values.declarationType === stateDeclarationTypes[5]?.value
 		) {
 			notificationCustom({ type: 'danger', message: 'Chưa nhập CMND/CCCD.' });
 			return false;
@@ -141,9 +140,9 @@ export default function DeclarationForm() {
 		onSubmit: values => {
 			if (validate(values)) {
 				// Save to localStorage
-				console.log(values);
-				localStorage.setItem('info', JSON.stringify(values));
-				localStorage.setItem(values.phoneNumber, JSON.stringify(values));
+				// console.log(values);
+				// localStorage.setItem('info', JSON.stringify(values));
+				// localStorage.setItem(values.phoneNumber, JSON.stringify(values));
 
 				// Save to database.
 				axios
@@ -163,6 +162,30 @@ export default function DeclarationForm() {
 		const epidemiologicalFactorsUrl = `https://kbyt.khambenh.gov.vn/api/v1/dichte?q={%22filters%22:{%22$and%22:[{%22trangthai%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22thutu_uutien%22,%22direction%22:%22asc%22}]}`;
 		const nationUrl = `https://kbyt.khambenh.gov.vn/api/v1/quocgia?results_per_page=1000&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
 		const provincesUrl = `https://kbyt.khambenh.gov.vn/api/v1/tinhthanh?results_per_page=100&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
+		const healthDeclarationTypes = `${ORIGIN_URL}/health-declaration-types/`;
+
+		axios
+			.get(healthDeclarationTypes)
+			.then(res => {
+				const resultConvert = res.data.map((item, index) => {
+					if (index === 1) {
+						return {
+							...item,
+							checked: true,
+							value: item.content,
+							text: item.content
+						};
+					}
+					return {
+						...item,
+						checked: false,
+						value: item.content,
+						text: item.content
+					};
+				});
+				setStateDeclarationTypes(resultConvert);
+			})
+			.catch(err => console.err);
 
 		axios.get(diseaseSymptomsUrl).then(resp => {
 			formik.setFieldValue('diseaseSymptoms', resp.data?.objects || []);
@@ -244,7 +267,7 @@ export default function DeclarationForm() {
 		const displayType = formik.values.declarationType;
 		formik.setFieldValue('declarationPlace', null);
 
-		if (displayType === declarationTypes[3].value) {
+		if (displayType === stateDeclarationTypes[3]?.value) {
 			const declarationPlacesUrl = `https://kbyt.khambenh.gov.vn/api/v1/donvi_filter?page=1&results_per_page=25&q={%22filters%22:{%22$and%22:[{%22tuyendonvi_id%22:{%22$neq%22:%227%22}},{%22active%22:{%22$eq%22:true}},{%22tiemchung_vacxin%22:{%22$eq%22:true}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
 
 			axios.get(declarationPlacesUrl).then(resp => {
@@ -274,7 +297,7 @@ export default function DeclarationForm() {
 	const onDeclarationTypeChange = event => {
 		const targetValue = event.target.value;
 		setStateDeclarationTypes(() => {
-			return declarationTypes.map(dt => {
+			return stateDeclarationTypes.map(dt => {
 				if (targetValue !== dt.value) {
 					return { ...dt, checked: false };
 				}
@@ -300,11 +323,9 @@ export default function DeclarationForm() {
 		setIsModalVisible(true);
 	};
 
-	const handleOk = () => {
-		setIsModalVisible(false);
-
-		axios
-			.post(`${ORIGIN_URL}auth/save`, {
+	const handleOk = async () => {
+		try {
+			const userSaved = await axios.post(`${ORIGIN_URL}auth/save`, {
 				phone_number: formik.values.phoneNumber,
 				full_name: formik.values.fullName,
 				sex: formik.values.sex,
@@ -314,41 +335,34 @@ export default function DeclarationForm() {
 				ward: formik.values.ward,
 				house_number: formik.values.houseNumber,
 				id_card_number: formik.values.idCardNumber
-			})
-			.then(res => {
-				if (res.data.success) {
-					const {
-						declarationPlace,
-						patientCode,
-						isFollwing = null,
-						phoneNumber,
-						diseaseSymptoms,
-						epidemiologicalFactors
-					} = formik.values;
-
-					console.log('hihi');
-					const newResult = {
-						declaration_place: declarationPlace,
-						test_code: patientCode,
-						is_follwing: isFollwing,
-						phone_number: phoneNumber,
-						symptoms: JSON.stringify(diseaseSymptoms),
-						epidemiological_factors: JSON.stringify(epidemiologicalFactors)
-					};
-
-					console.log(newResult);
-					axios
-						.post(`${ORIGIN_URL}result-declaration/create`, newResult)
-						.then(res => {
-							if (res.data.success) {
-								setTimeout(() => {
-									// window.location.reload();
-								}, 3000);
-							}
-						})
-						.catch(err => console.error(err));
-				}
 			});
+			if (userSaved.data?.success) {
+				const newResultDeclarationForm = {
+					declaration_place: formik.values.declarationPlace,
+					test_code: formik.values.patientCode,
+					is_follwing: formik.values.isFollwing,
+					phone_number: formik.values.phoneNumber,
+					symptoms: JSON.stringify(formik.values.diseaseSymptoms),
+					epidemiological_factors: JSON.stringify(formik.values.epidemiologicalFactors)
+				};
+				console.log(newResultDeclarationForm);
+
+				const resultDeclarationFormSaved = await axios.post(
+					`${ORIGIN_URL}result-declaration/create`,
+					newResultDeclarationForm
+				);
+
+				if (resultDeclarationFormSaved.data.success) {
+					setTimeout(() => {
+						// window.location.reload();
+					}, 3000);
+				}
+			}
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setIsModalVisible(false);
+		}
 	};
 
 	return (
@@ -402,7 +416,7 @@ export default function DeclarationForm() {
 				</div>
 
 				{formik.values.declarationType &&
-				formik.values.declarationType === declarationTypes[5].value ? (
+				formik.values.declarationType === stateDeclarationTypes[5]?.value ? (
 					<div className='label-red' style={{ textAlign: 'center' }}>
 						Sử dụng cho F0 khai báo sức khoẻ và cách ly tại nhà
 					</div>
@@ -462,7 +476,7 @@ export default function DeclarationForm() {
 				</Row>
 
 				{formik.values.declarationType &&
-				formik.values.declarationType === declarationTypes[1].value ? (
+				formik.values.declarationType === stateDeclarationTypes[1]?.value ? (
 					<>
 						<label>
 							<span>Mã nhân viên:</span>
@@ -586,13 +600,13 @@ export default function DeclarationForm() {
 				</label>
 
 				{formik.values.declarationType &&
-				(formik.values.declarationType === declarationTypes[3].value ||
-					formik.values.declarationType === declarationTypes[4].value ||
-					formik.values.declarationType === declarationTypes[5].value) ? (
+				(formik.values.declarationType === stateDeclarationTypes[3]?.value ||
+					formik.values.declarationType === stateDeclarationTypes[4]?.value ||
+					formik.values.declarationType === stateDeclarationTypes[5]?.value) ? (
 					<label>
 						<span>
 							CMND/CCCD
-							{formik.values.declarationType === declarationTypes[4].value ? (
+							{formik.values.declarationType === stateDeclarationTypes[4]?.value ? (
 								<span className='label-red'> (*)</span>
 							) : null}
 							:
@@ -606,8 +620,8 @@ export default function DeclarationForm() {
 				) : null}
 
 				{formik.values.declarationType &&
-				(formik.values.declarationType === declarationTypes[4].value ||
-					formik.values.declarationType === declarationTypes[5].value) ? (
+				(formik.values.declarationType === stateDeclarationTypes[4]?.value ||
+					formik.values.declarationType === stateDeclarationTypes[5]?.value) ? (
 					<>
 						<p className='type-of-test-object-title'>
 							Ông/Bà hiện có mắc Covid-19 hoặc các trường hợp theo dõi sau đây không?:
@@ -642,8 +656,8 @@ export default function DeclarationForm() {
 						</div>
 					</>
 				) : null}
-				{(formik.values.declarationType === declarationTypes[4].value ||
-					formik.values.declarationType === declarationTypes[5].value) &&
+				{(formik.values.declarationType === stateDeclarationTypes[4]?.value ||
+					formik.values.declarationType === stateDeclarationTypes[5]?.value) &&
 				formik.values.typeOfTestObject.trim().toLowerCase() === 'có' ? (
 					<>
 						<p className='place-of-test-object-title'>Nơi xét nghiệm:</p>
@@ -689,7 +703,7 @@ export default function DeclarationForm() {
 				) : null}
 
 				{formik.values.declarationType &&
-				formik.values.declarationType === declarationTypes[5].value ? (
+				formik.values.declarationType === stateDeclarationTypes[5]?.value ? (
 					<>
 						<p className='background-disease-title'>Ông/Bà có mắc bệnh nền hay không?:</p>
 						<div className='background-disease'>
@@ -713,7 +727,7 @@ export default function DeclarationForm() {
 					</>
 				) : null}
 				{formik.values.declarationType &&
-				formik.values.declarationType === declarationTypes[5].value &&
+				formik.values.declarationType === stateDeclarationTypes[5]?.value &&
 				isBackgroundDisease &&
 				isBackgroundDisease === 'Có' ? (
 					<>
@@ -774,7 +788,7 @@ export default function DeclarationForm() {
 				) : null}
 
 				{formik.values.declarationType &&
-				formik.values.declarationType === declarationTypes[5].value ? (
+				formik.values.declarationType === stateDeclarationTypes[5]?.value ? (
 					<>
 						<p className='is-used-molnupiravir-title'>Ông/Bà có sử dụng thuốc Molnupiravir?:</p>
 						<div className='is-used-molnupiravir'>
@@ -799,7 +813,7 @@ export default function DeclarationForm() {
 					</>
 				) : null}
 				{formik.values.declarationType &&
-				formik.values.declarationType === declarationTypes[5].value &&
+				formik.values.declarationType === stateDeclarationTypes[5]?.value &&
 				isUsedMolnupiravir &&
 				isUsedMolnupiravir === 'yes' ? (
 					<div className='used-molnupiravir'>
@@ -841,7 +855,7 @@ export default function DeclarationForm() {
 				) : null}
 
 				{formik.values.declarationType &&
-				formik.values.declarationType === declarationTypes[5].value ? (
+				formik.values.declarationType === stateDeclarationTypes[5]?.value ? (
 					<>
 						<Row gutter={16}>
 							<Col className='gutter-row' span={12}>
