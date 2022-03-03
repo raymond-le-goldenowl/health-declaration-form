@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import { useFormik } from 'formik';
-import { Col, Input, Row } from 'antd';
+import { Col, Input, Modal, Row } from 'antd';
 import { SyncOutlined } from '@ant-design/icons/lib/icons';
 
 import { declarationTypes } from 'app/services';
@@ -14,6 +14,7 @@ import SelectOption from 'app/components/Select';
 import DatePickerCustom from 'app/components/DatePickerCustom';
 
 import './styles.scss';
+import { ORIGIN_URL } from 'app/config/http-links';
 
 const makeCaptchaNumbers = (min = 1000, max = 99999) => {
 	return Math.floor(Math.random() * (max - min) + min);
@@ -26,9 +27,6 @@ export default function DeclarationForm() {
 	const [nations, setNations] = useState([]);
 	const [provinces, setProvinces] = useState([]);
 	const [districts, setDistricts] = useState([]);
-
-	const [diseaseSymptoms, setDiseaseSymptoms] = useState([]);
-	const [epidemiologicalFactors, setEpidemiologicalFactors] = useState([]);
 
 	const [declarationPlaces, setDeclarationPlaces] = useState([]);
 	const [stateDeclarationTypes, setStateDeclarationTypes] = useState(() => declarationTypes || []);
@@ -55,6 +53,7 @@ export default function DeclarationForm() {
 	const [isDisableSymptomsAfterUsedMolnupiravir, setIsDisableSymptomsAfterUsedMolnupiravir] =
 		useState(false);
 
+	const [otpText, setOtpText] = useState(null);
 	const [captchaText, setCaptchaText] = useState(null);
 	const randomCaptchaCode = useRef(makeCaptchaNumbers());
 
@@ -107,7 +106,7 @@ export default function DeclarationForm() {
 			houseNumber: null,
 			sex: 'Nam',
 			department: null,
-			patientCode: null,
+			patientCode: 0,
 			idCardNumber: null,
 			dateOfBirth: null,
 			boarding: null,
@@ -132,26 +131,29 @@ export default function DeclarationForm() {
 			anotherSymptoms: null,
 
 			bodyTemperature: null,
-			bloodOxygenLevel: null
+			bloodOxygenLevel: null,
+
+			diseaseSymptoms: [],
+			epidemiologicalFactors: [],
+
+			otpCode: null
 		},
 		onSubmit: values => {
 			if (validate(values)) {
-				// values will not save on local storage
-				delete values.declarationPlace;
-				delete values.declarationType;
-				delete values.typeOfTestObject;
-				delete values.placeOfTest;
-				delete values.backgroundDisease;
-				delete values.SymptomsAfterUsedMolnupiravir;
-				delete values.anotherSymptoms;
-				delete values.bodyTemperature;
-				delete values.bloodOxygenLevel;
-
 				// Save to localStorage
+				console.log(values);
 				localStorage.setItem('info', JSON.stringify(values));
 				localStorage.setItem(values.phoneNumber, JSON.stringify(values));
 
 				// Save to database.
+				axios
+					.post(`${ORIGIN_URL}auth/request-save`, { phone_number: values.phoneNumber })
+					.then(res => {
+						if (res.data.success) {
+							showModal();
+						}
+					})
+					.catch(err => console.log(err));
 			}
 		}
 	});
@@ -162,10 +164,12 @@ export default function DeclarationForm() {
 		const nationUrl = `https://kbyt.khambenh.gov.vn/api/v1/quocgia?results_per_page=1000&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
 		const provincesUrl = `https://kbyt.khambenh.gov.vn/api/v1/tinhthanh?results_per_page=100&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
 
-		axios.get(diseaseSymptomsUrl).then(resp => setDiseaseSymptoms(resp.data?.objects || []));
-		axios
-			.get(epidemiologicalFactorsUrl)
-			.then(resp => setEpidemiologicalFactors(resp.data?.objects || []));
+		axios.get(diseaseSymptomsUrl).then(resp => {
+			formik.setFieldValue('diseaseSymptoms', resp.data?.objects || []);
+		});
+		axios.get(epidemiologicalFactorsUrl).then(resp => {
+			formik.setFieldValue('epidemiologicalFactors', resp.data?.objects || []);
+		});
 		axios.get(nationUrl).then(resp => {
 			const data = resp.data?.objects.map(nation => {
 				if (nation.ma === 'VN' && nation.tenkhongdau === 'viet nam') {
@@ -238,6 +242,7 @@ export default function DeclarationForm() {
 
 	useEffect(() => {
 		const displayType = formik.values.declarationType;
+		formik.setFieldValue('declarationPlace', null);
 
 		if (displayType === declarationTypes[3].value) {
 			const declarationPlacesUrl = `https://kbyt.khambenh.gov.vn/api/v1/donvi_filter?page=1&results_per_page=25&q={%22filters%22:{%22$and%22:[{%22tuyendonvi_id%22:{%22$neq%22:%227%22}},{%22active%22:{%22$eq%22:true}},{%22tiemchung_vacxin%22:{%22$eq%22:true}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
@@ -289,8 +294,80 @@ export default function DeclarationForm() {
 		}
 	};
 
+	const [isModalVisible, setIsModalVisible] = useState(false);
+
+	const showModal = () => {
+		setIsModalVisible(true);
+	};
+
+	const handleOk = () => {
+		setIsModalVisible(false);
+
+		axios
+			.post(`${ORIGIN_URL}auth/save`, {
+				phone_number: formik.values.phoneNumber,
+				full_name: formik.values.fullName,
+				sex: formik.values.sex,
+				national: formik.values.national,
+				province: formik.values.province,
+				district: formik.values.district,
+				ward: formik.values.ward,
+				house_number: formik.values.houseNumber,
+				id_card_number: formik.values.idCardNumber
+			})
+			.then(res => {
+				if (res.data.success) {
+					const {
+						declarationPlace,
+						patientCode,
+						isFollwing = null,
+						phoneNumber,
+						diseaseSymptoms,
+						epidemiologicalFactors
+					} = formik.values;
+
+					console.log('hihi');
+					const newResult = {
+						declaration_place: declarationPlace,
+						test_code: patientCode,
+						is_follwing: isFollwing,
+						phone_number: phoneNumber,
+						symptoms: JSON.stringify(diseaseSymptoms),
+						epidemiological_factors: JSON.stringify(epidemiologicalFactors)
+					};
+
+					console.log(newResult);
+					axios
+						.post(`${ORIGIN_URL}result-declaration/create`, newResult)
+						.then(res => {
+							if (res.data.success) {
+								setTimeout(() => {
+									// window.location.reload();
+								}, 3000);
+							}
+						})
+						.catch(err => console.error(err));
+				}
+			});
+	};
+
 	return (
 		<div id='declaration-form'>
+			<Modal
+				title='Enter your OTP code!'
+				visible={isModalVisible}
+				onOk={handleOk}
+				maskClosable={false}
+			>
+				<label>
+					<Input
+						type='number'
+						value={otpText}
+						onChange={({ target }) => setOtpText(target.value)}
+					/>
+				</label>
+			</Modal>
+
 			<h2 className='title-blue'>SỞ Y TẾ TP. HỒ CHÍ MINH</h2>
 
 			<h3 className='title-red'>
@@ -339,6 +416,7 @@ export default function DeclarationForm() {
 						width={'100%'}
 						placeholder={'Nhập và chọn nơi khai báo'}
 						options={declarationPlaces}
+						value={formik.values.declarationPlace}
 						getValueSelected={value => {
 							formik.setFieldValue('declarationPlace', value);
 						}}
@@ -805,7 +883,7 @@ export default function DeclarationForm() {
 							</tr>
 						</thead>
 						<tbody>
-							{diseaseSymptoms.map(diseaseSymptom => (
+							{formik.values.diseaseSymptoms.map(diseaseSymptom => (
 								<tr key={diseaseSymptom.id}>
 									<td>
 										{diseaseSymptom.ten}
@@ -837,17 +915,17 @@ export default function DeclarationForm() {
 							</tr>
 						</thead>
 						<tbody>
-							{epidemiologicalFactors.map(epidemiologicalFactor => (
+							{formik.values.epidemiologicalFactors.map(epidemiologicalFactor => (
 								<tr key={epidemiologicalFactor.id}>
 									<td>
 										{epidemiologicalFactor.ten}
 										<span className='label-red'> (*)</span>
 									</td>
 									<td>
-										<input type='radio' name={epidemiologicalFactor.id} />
+										<input type='radio' value='Không' name={epidemiologicalFactor.id} />
 									</td>
 									<td>
-										<input defaultChecked type='radio' name={epidemiologicalFactor.id} />
+										<input defaultChecked type='radio' value='Có' name={epidemiologicalFactor.id} />
 									</td>
 								</tr>
 							))}

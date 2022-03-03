@@ -9,11 +9,9 @@ import './index.scss';
 import 'antd/dist/antd.css';
 
 ReactDOM.render(
-	<React.StrictMode>
-		<Suspense fallback={<p>Loading ...</p>}>
-			<BrowserRouter history={history}>{renderRouteConfigs(routes)}</BrowserRouter>
-		</Suspense>
-	</React.StrictMode>,
+	<Suspense fallback={<p>Loading ...</p>}>
+		<BrowserRouter history={history}>{renderRouteConfigs(routes)}</BrowserRouter>
+	</Suspense>,
 	document.getElementById('root')
 );
 
