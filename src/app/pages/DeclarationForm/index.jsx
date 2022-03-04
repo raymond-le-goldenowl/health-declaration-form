@@ -52,7 +52,6 @@ export default function DeclarationForm() {
 	const [isDisableSymptomsAfterUsedMolnupiravir, setIsDisableSymptomsAfterUsedMolnupiravir] =
 		useState(false);
 
-	const [otpText, setOtpText] = useState(null);
 	const [captchaText, setCaptchaText] = useState(null);
 	const randomCaptchaCode = useRef(makeCaptchaNumbers());
 
@@ -105,7 +104,7 @@ export default function DeclarationForm() {
 			houseNumber: null,
 			sex: 'Nam',
 			department: null,
-			patientCode: null,
+			employeeCode: null,
 			idCardNumber: null,
 			dateOfBirth: null,
 			boarding: null,
@@ -127,7 +126,7 @@ export default function DeclarationForm() {
 			backgroundDisease: [],
 
 			SymptomsAfterUsedMolnupiravir: [],
-			anotherSymptoms: null,
+			otherSymptoms: null,
 
 			bodyTemperature: null,
 			bloodOxygenLevel: null,
@@ -146,7 +145,7 @@ export default function DeclarationForm() {
 
 				// Save to database.
 				axios
-					.post(`${ORIGIN_URL}auth/request-save`, { phone_number: values.phoneNumber })
+					.post(`${ORIGIN_URL}user/request-save`, { phone_number: values.phoneNumber })
 					.then(res => {
 						if (res.data.success) {
 							showModal();
@@ -162,13 +161,14 @@ export default function DeclarationForm() {
 		const epidemiologicalFactorsUrl = `https://kbyt.khambenh.gov.vn/api/v1/dichte?q={%22filters%22:{%22$and%22:[{%22trangthai%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22thutu_uutien%22,%22direction%22:%22asc%22}]}`;
 		const nationUrl = `https://kbyt.khambenh.gov.vn/api/v1/quocgia?results_per_page=1000&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
 		const provincesUrl = `https://kbyt.khambenh.gov.vn/api/v1/tinhthanh?results_per_page=100&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
-		const healthDeclarationTypes = `${ORIGIN_URL}/health-declaration-types/`;
+		const healthDeclarationTypes = `${ORIGIN_URL}health-declaration-types/`;
 
 		axios
 			.get(healthDeclarationTypes)
 			.then(res => {
 				const resultConvert = res.data.map((item, index) => {
-					if (index === 1) {
+					if (index === 0) {
+						formik.setFieldValue('declarationType', item.content);
 						return {
 							...item,
 							checked: true,
@@ -325,25 +325,41 @@ export default function DeclarationForm() {
 
 	const handleOk = async () => {
 		try {
-			const userSaved = await axios.post(`${ORIGIN_URL}auth/save`, {
+			const userSaved = await axios.post(`${ORIGIN_URL}user/save`, {
 				phone_number: formik.values.phoneNumber,
 				full_name: formik.values.fullName,
+				date_of_birth: formik.values.dateOfBirth,
 				sex: formik.values.sex,
+				employee_code: formik.values.employeeCode,
+				department: formik.values.department,
 				national: formik.values.national,
 				province: formik.values.province,
 				district: formik.values.district,
 				ward: formik.values.ward,
 				house_number: formik.values.houseNumber,
-				id_card_number: formik.values.idCardNumber
+				id_card_number: formik.values.idCardNumber,
+				otp_code: formik.values.otpCode
 			});
+
+			console.log(userSaved);
 			if (userSaved.data?.success) {
+				const declarationTypeId = stateDeclarationTypes.filter(item => {
+					console.log(item.value, formik.values.declarationType);
+					return item.value === formik.values.declarationType;
+				})[0].id;
+
 				const newResultDeclarationForm = {
 					declaration_place: formik.values.declarationPlace,
-					test_code: formik.values.patientCode,
-					is_follwing: formik.values.isFollwing,
-					phone_number: formik.values.phoneNumber,
-					symptoms: JSON.stringify(formik.values.diseaseSymptoms),
-					epidemiological_factors: JSON.stringify(formik.values.epidemiologicalFactors)
+					place_of_test: formik.values.placeOfTest,
+					background_disease: JSON.stringify(formik.values.backgroundDisease),
+					symptoms_used_molnupiravir: JSON.stringify(formik.values.SymptomsAfterUsedMolnupiravir),
+					body_temperature: formik.values.bodyTemperature,
+					blood_oxygen_level: formik.values.bloodOxygenLevel,
+					disease_symptoms: JSON.stringify(formik.values.diseaseSymptoms),
+					epidemiological_factors: JSON.stringify(formik.values.epidemiologicalFactors),
+					other_symptoms: formik.values.otherSymptoms,
+					user_phone_number: formik.values.phoneNumber,
+					declaration_type_id: declarationTypeId
 				};
 				console.log(newResultDeclarationForm);
 
@@ -352,16 +368,17 @@ export default function DeclarationForm() {
 					newResultDeclarationForm
 				);
 
+				console.log(resultDeclarationFormSaved);
 				if (resultDeclarationFormSaved.data.success) {
 					setTimeout(() => {
-						// window.location.reload();
+						setIsModalVisible(false);
 					}, 3000);
 				}
+			} else {
+				notificationCustom({ message: userSaved.data.message });
 			}
 		} catch (error) {
 			console.error(error);
-		} finally {
-			setIsModalVisible(false);
 		}
 	};
 
@@ -376,8 +393,8 @@ export default function DeclarationForm() {
 				<label>
 					<Input
 						type='number'
-						value={otpText}
-						onChange={({ target }) => setOtpText(target.value)}
+						value={formik.values.otpCode}
+						onChange={({ target }) => formik.setFieldValue('otpCode', target.value)}
 					/>
 				</label>
 			</Modal>
@@ -483,7 +500,7 @@ export default function DeclarationForm() {
 							<Input
 								type='number'
 								placeholder='Mã nhân viên'
-								{...formik.getFieldProps('patientCode')}
+								{...formik.getFieldProps('employeeCode')}
 							/>
 						</label>
 
@@ -847,7 +864,7 @@ export default function DeclarationForm() {
 								<Input
 									type='text'
 									disabled={isDisableSymptomsAfterUsedMolnupiravir}
-									{...formik.getFieldProps('anotherSymptoms')}
+									// ! chưa lấy dữ liệu chổ này.
 								/>
 							</label>
 						</div>
@@ -951,6 +968,7 @@ export default function DeclarationForm() {
 					placeholder='Vui lòng cung cấp thêm thông tin về triệu chứng hay dấu hiệu khác nếu có'
 					className='more-info'
 					rows={2}
+					{...formik.getFieldProps('otherSymptoms')}
 				></TextArea>
 
 				<div className='captcha'>
