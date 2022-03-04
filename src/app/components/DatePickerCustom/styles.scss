@@ -4,13 +4,15 @@
 * *********** Component: DatePickerCustom *********** *
 */
 
+@import '../../../index.scss';
+
 /* Update color for selection day */
 .ant-picker-cell-in-view {
 	.ant-picker-cell-selected .ant-picker-cell-inner {
-		background-color: var(--color-teal);
+		background-color: $color-teal;
 	}
 	.ant-picker-cell-today .ant-picker-cell-inner::before {
-		border-color: var(--color-teal);
+		border-color: $color-teal;
 	}
 }
 
@@ -25,7 +27,7 @@
 	border-right: 9px solid transparent;
 	border-bottom: 10px solid #fff;
 	text-shadow: 3px 3px 10px red;
-	-webkit-filter: drop-shadow(1px 0px 1px rgba(0, 0, 0, 0.5));
+	// -webkit-filter: drop-shadow(1px 0px 1px rgba(0, 0, 0, 0.5));
 	filter: drop-shadow(1px 0px 1px rgba(0, 0, 0, 0.5));
 	z-index: -1;
 }
