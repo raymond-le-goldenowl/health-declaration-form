@@ -6,12 +6,14 @@
 	.title-blue {
 		font-weight: 700;
 		text-align: center;
+		margin: .2em 20px .4em 20px;
 		color: $color-blue;
 	}
 
 	.title-red {
 		text-align: center;
 		color: $color-red;
+		margin: 0 20px 2em 20px;
 	}
 	.label-red {
 		color: $color-red;
@@ -20,7 +22,8 @@
 	// * Good here * //
 
 	#form-container {
-		width: 65%;
+		max-width: 70%;
+		min-width: 460px;
 
 		overflow: hidden;
 		margin: 0 auto;
@@ -30,8 +33,12 @@
 		background-clip: border-box;
 		border: 1px solid #e7eaed;
 		border-radius: 0.25rem;
-		min-width: 0;
 		word-wrap: break-word;
+
+		@media screen and (max-width: 1600px) {
+			max-width: 85%;
+			transition: all 0.3s;
+		}
 
 		// * Good here * //
 
@@ -85,7 +92,7 @@
 			}
 
 			.btn-reset-data-wrapper {
-				flex: 2;
+				flex: 4;
 				display: flex;
 				justify-content: flex-end;
 				align-items: flex-end;
@@ -132,7 +139,6 @@
 						min-width: 70px;
 						width: 70px;
 					}
-					
 				}
 				:is(td:nth-child(2), td:nth-child(3)) {
 					text-align: center;
@@ -337,13 +343,19 @@
 				span {
 					width: 100%;
 				}
+				&:last-child {
+					span {
+						width: 20%;
+					}
+				}
 
 				input {
 					margin-right: 8px;
 				}
 
 				input[type='text'] {
-					width: 700%;
+					flex: auto;
+					margin-bottom: 0;
 				}
 			}
 		}

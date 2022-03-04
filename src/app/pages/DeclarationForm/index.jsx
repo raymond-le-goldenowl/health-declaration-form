@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import axios from 'axios';
+import { nanoid } from 'nanoid';
 import { useFormik } from 'formik';
 import { Col, Input, Row } from 'antd';
 import { SyncOutlined } from '@ant-design/icons/lib/icons';
@@ -21,22 +22,139 @@ const makeCaptchaNumbers = (min = 1000, max = 99999) => {
 export default function DeclarationForm() {
 	const { TextArea } = Input;
 
-	const [diseaseSymptoms, setDiseaseSymptoms] = useState([]);
-	const [epidemiologicalFactors, setEpidemiologicalFactors] = useState([]);
+	const [wards, setWards] = useState([]);
 	const [nations, setNations] = useState([]);
 	const [provinces, setProvinces] = useState([]);
-	const [provinceSelected, setProvinceSelected] = useState(null);
 	const [districts, setDistricts] = useState([]);
-	const [districtSelected, setDistrictSelected] = useState(null);
-	const [wards, setWards] = useState([]);
+
+	const [diseaseSymptoms, setDiseaseSymptoms] = useState([]);
+	const [epidemiologicalFactors, setEpidemiologicalFactors] = useState([]);
+
 	const [declarationPlaces, setDeclarationPlaces] = useState([]);
+	const [stateDeclarationTypes, setStateDeclarationTypes] = useState(() => declarationTypes || []);
+
+	// symptom-after-used-molnupiravir
+	const symptomAfterUsedMolnupiravir = useRef([
+		{ id: nanoid(3), content: 'Không', isChecked: false },
+		{ id: nanoid(3), content: 'Nôn', isChecked: false },
+		{ id: nanoid(3), content: 'Chóng mặt', isChecked: false },
+		{ id: nanoid(3), content: 'Đau bụng', isChecked: false },
+		{ id: nanoid(3), content: 'Đau tay chân', isChecked: false },
+		{ id: nanoid(3), content: 'Buồn nôn', isChecked: false },
+		{ id: nanoid(3), content: 'Tê tay chân', isChecked: false },
+		{ id: nanoid(3), content: 'Nổi sần ngứa', isChecked: false },
+		{ id: nanoid(3), content: 'Đau đầu', isChecked: false },
+		{ id: nanoid(3), content: 'Đau lưng', isChecked: false },
+		{ id: nanoid(3), content: 'Sổ mũi', isChecked: false },
+		{ id: nanoid(3), content: 'Tiêu chảy', isChecked: false },
+		{ id: nanoid(3), content: 'Yếu liệt tay chân', isChecked: false }
+	]);
+
+	const [isUsedMolnupiravir, setIsUsedMolnupiravir] = useState('Không');
+	const [isBackgroundDisease, setIsBackgroundDisease] = useState('Không');
+	const [isDisableSymptomsAfterUsedMolnupiravir, setIsDisableSymptomsAfterUsedMolnupiravir] =
+		useState(false);
+
 	const [captchaText, setCaptchaText] = useState(null);
-	const [declarationTypesState, setDeclarationTypesState] = useState(() => declarationTypes || []);
-	const [displayType, setDisplayType] = useState(undefined);
-	const [typeOfTestObject, setTypeOfTestObject] = useState('no');
-	const [backgroundDisease, setBackgroundDisease] = useState('no');
-	const [isUsedMolnupiravir, setIsUsedMolnupiravir] = useState('no');
-	const codeRef = useRef(makeCaptchaNumbers());
+	const randomCaptchaCode = useRef(makeCaptchaNumbers());
+
+	const validate = values => {
+		if (values.declarationPlace === null) {
+			notificationCustom({ type: 'danger', message: 'Chưa chọn nơi khai báo.' });
+			return false;
+		} else if (values.phoneNumber === null) {
+			notificationCustom({ type: 'danger', message: 'Chưa nhập số điện thoại.' });
+			return false;
+		} else if (values.fullName === null) {
+			notificationCustom({ type: 'danger', message: 'Chưa nhập tên.' });
+			return false;
+		} else if (values.dateOfBirth === null) {
+			notificationCustom({ type: 'danger', message: 'Chưa chọn năm sinh.' });
+			return false;
+		} else if (values.sex === null) {
+			notificationCustom({ type: 'danger', message: 'Chưa chọn giới tính.' });
+			return false;
+		} else if (values.province === null) {
+			notificationCustom({ type: 'danger', message: 'Chưa chọn tỉnh thành.' });
+			return false;
+		} else if (values.district === null) {
+			notificationCustom({ type: 'danger', message: 'Chưa chọn quận huyện.' });
+			return false;
+		} else if (values.ward === null) {
+			notificationCustom({ type: 'danger', message: 'Chưa chọn xã phường.' });
+			return false;
+		} else if (values.houseNumber === null) {
+			notificationCustom({ type: 'danger', message: 'Chưa nhập địa chỉ.' });
+			return false;
+		} else if (
+			values.idCardNumber === null &&
+			formik.values.declarationType === declarationTypes[5].value
+		) {
+			notificationCustom({ type: 'danger', message: 'Chưa nhập CMND/CCCD.' });
+			return false;
+		} else if (
+			String(randomCaptchaCode.current).toLocaleLowerCase().trim().replaceAll('', '') !==
+			String(captchaText).toLocaleLowerCase().trim().replaceAll('', '')
+		) {
+			notificationCustom({ type: 'danger', message: 'Mã xác thực không đúng.' });
+			return false;
+		}
+		return true;
+	};
+
+	const formik = useFormik({
+		initialValues: {
+			houseNumber: null,
+			sex: 'Nam',
+			department: null,
+			patientCode: null,
+			idCardNumber: null,
+			dateOfBirth: null,
+			boarding: null,
+			district: null,
+			national: null,
+			phoneNumber: null,
+			fullName: null,
+			province: null,
+			ward: null,
+
+			declarationType: null,
+			declarationPlace: null,
+
+			// Chỉnh dành cho loại khai báo cuối và khai báo gần cuối.
+			typeOfTestObject: 'Không',
+			placeOfTest: null,
+
+			// Chỉnh dành cho loại khai báo cuối.
+			backgroundDisease: [],
+
+			SymptomsAfterUsedMolnupiravir: [],
+			anotherSymptoms: null,
+
+			bodyTemperature: null,
+			bloodOxygenLevel: null
+		},
+		onSubmit: values => {
+			if (validate(values)) {
+				// values will not save on local storage
+				delete values.declarationPlace;
+				delete values.declarationType;
+				delete values.typeOfTestObject;
+				delete values.placeOfTest;
+				delete values.backgroundDisease;
+				delete values.SymptomsAfterUsedMolnupiravir;
+				delete values.anotherSymptoms;
+				delete values.bodyTemperature;
+				delete values.bloodOxygenLevel;
+
+				// Save to localStorage
+				localStorage.setItem('info', JSON.stringify(values));
+				localStorage.setItem(values.phoneNumber, JSON.stringify(values));
+
+				// Save to database.
+			}
+		}
+	});
 
 	useEffect(() => {
 		const diseaseSymptomsUrl = `https://kbyt.khambenh.gov.vn/api/v1/trieuchung?q={%22filters%22:{%22$and%22:[{%22trangthai%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22thutu_uutien%22,%22direction%22:%22asc%22}]}`;
@@ -49,12 +167,25 @@ export default function DeclarationForm() {
 			.get(epidemiologicalFactorsUrl)
 			.then(resp => setEpidemiologicalFactors(resp.data?.objects || []));
 		axios.get(nationUrl).then(resp => {
-			const data = resp.data?.objects.map(nation => ({
-				id: nation.id,
-				key: nation.id,
-				value: nation.ten,
-				text: nation.ten
-			}));
+			const data = resp.data?.objects.map(nation => {
+				if (nation.ma === 'VN' && nation.tenkhongdau === 'viet nam') {
+					formik.setFieldValue(
+						'national',
+						JSON.stringify({
+							id: nation.id,
+							key: nation.id,
+							value: nation.ten,
+							text: nation.ten
+						})
+					);
+				}
+				return {
+					id: nation.id,
+					key: nation.id,
+					value: nation.ten,
+					text: nation.ten
+				};
+			});
 			setNations(data);
 		});
 		axios.get(provincesUrl).then(resp => {
@@ -69,6 +200,7 @@ export default function DeclarationForm() {
 	}, []);
 
 	useEffect(() => {
+		const provinceSelected = formik.values.province;
 		if (provinceSelected !== null) {
 			const provinceId = JSON.parse(provinceSelected)?.id;
 
@@ -81,13 +213,14 @@ export default function DeclarationForm() {
 					text: district.ten
 				}));
 
-				setDistricts(null);
 				setDistricts(data);
 			});
 		}
-	}, [provinceSelected]);
+	}, [formik.values.province]);
 
 	useEffect(() => {
+		const districtSelected = formik.values.district;
+
 		if (districtSelected !== null) {
 			const districtId = JSON.parse(districtSelected)?.id;
 			const wardsUrl = `https://kbyt.khambenh.gov.vn/api/v1/xaphuong?results_per_page=50&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}},{%22quanhuyen_id%22:{%22$eq%22:%22${districtId}%22}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
@@ -101,9 +234,11 @@ export default function DeclarationForm() {
 				setWards(data);
 			});
 		}
-	}, [districtSelected]);
+	}, [formik.values.district]);
 
 	useEffect(() => {
+		const displayType = formik.values.declarationType;
+
 		if (displayType === declarationTypes[3].value) {
 			const declarationPlacesUrl = `https://kbyt.khambenh.gov.vn/api/v1/donvi_filter?page=1&results_per_page=25&q={%22filters%22:{%22$and%22:[{%22tuyendonvi_id%22:{%22$neq%22:%227%22}},{%22active%22:{%22$eq%22:true}},{%22tiemchung_vacxin%22:{%22$eq%22:true}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
 
@@ -129,81 +264,30 @@ export default function DeclarationForm() {
 				setDeclarationPlaces(data);
 			});
 		}
-	}, [displayType]);
+	}, [formik.values.declarationType]);
 
 	const onDeclarationTypeChange = event => {
 		const targetValue = event.target.value;
-		setDeclarationTypesState(() => {
+		setStateDeclarationTypes(() => {
 			return declarationTypes.map(dt => {
 				if (targetValue !== dt.value) {
 					return { ...dt, checked: false };
 				}
 
-				setDisplayType(dt.value);
+				formik.setFieldValue('declarationType', dt.value);
 				return { ...dt, checked: true };
 			});
 		});
 	};
 
-	const validate = values => {
-		if (values.noiKhaiBao === null) {
-			notificationCustom({ type: 'danger', message: 'Chưa chọn nơi khai báo.' });
-			return false;
-		} else if (values.diaChi === null) {
-			notificationCustom({ type: 'danger', message: 'Chưa nhập địa chỉ.' });
-			return false;
-		} else if (values.gioiTinh === null) {
-			notificationCustom({ type: 'danger', message: 'Chưa chọn giới tính.' });
-			return false;
-		} else if (values.namSinh === null) {
-			notificationCustom({ type: 'danger', message: 'Chưa chọn năm sinh.' });
-			return false;
-		} else if (values.quanHuyen === null) {
-			notificationCustom({ type: 'danger', message: 'Chưa chọn quận huyện.' });
-			return false;
-		} else if (values.soDienThoai === null) {
-			notificationCustom({ type: 'danger', message: 'Chưa nhập số điện thoại.' });
-			return false;
-		} else if (values.ten === null) {
-			notificationCustom({ type: 'danger', message: 'Chưa nhập tên.' });
-			return false;
-		} else if (values.tinhThanh === null) {
-			notificationCustom({ type: 'danger', message: 'Chưa chọn tỉnh thành.' });
-			return false;
-		} else if (values.xaPhuong === null) {
-			notificationCustom({ type: 'danger', message: 'Chưa chọn xã phường.' });
-			return false;
-		} else if (codeRef.current !== captchaText) {
-			notificationCustom({ type: 'danger', message: 'Mã xác thực không đúng.' });
-			return false;
+	const onChangeSymptomAfterUsedMolnupiravir = ({ target }) => {
+		if (target.value.trim().toLowerCase() === 'không') {
+			formik.values.SymptomsAfterUsedMolnupiravir = [];
+			setIsDisableSymptomsAfterUsedMolnupiravir(target.checked);
+		} else {
+			formik.values.SymptomsAfterUsedMolnupiravir.push(target.value);
 		}
-		return true;
 	};
-	const formik = useFormik({
-		initialValues: {
-			diaChi: null,
-			gioiTinh: 'Nam',
-			khoaPhong: null,
-			maBenhNhan: null,
-			maSinhVien: null,
-			namSinh: null,
-			noiTru: null,
-			quanHuyen: null,
-			quocTichID: null,
-			soDienThoai: null,
-			ten: null,
-			tinhThanh: null,
-			xaPhuong: null,
-			noiKhaiBao: null
-		},
-		onSubmit: values => {
-			if (validate(values)) {
-				delete values.noiKhaiBao;
-				localStorage.setItem('info', JSON.stringify(values));
-				localStorage.setItem(values.soDienThoai, JSON.stringify(values));
-			}
-		}
-	});
 
 	return (
 		<div id='declaration-form'>
@@ -215,7 +299,7 @@ export default function DeclarationForm() {
 			<form id='form-container' onSubmit={formik.handleSubmit}>
 				<div className='list-types-declaration'>
 					<div className='list-types-declaration-list-radios'>
-						{declarationTypesState.map(declarationType => {
+						{stateDeclarationTypes.map(declarationType => {
 							return (
 								<label key={declarationType?.id}>
 									<input
@@ -238,48 +322,42 @@ export default function DeclarationForm() {
 						</button>
 					</div>
 				</div>
-				{displayType && displayType === declarationTypes[5].value ? (
+
+				{formik.values.declarationType &&
+				formik.values.declarationType === declarationTypes[5].value ? (
 					<div className='label-red' style={{ textAlign: 'center' }}>
 						Sử dụng cho F0 khai báo sức khoẻ và cách ly tại nhà
 					</div>
 				) : null}
-				<div>
-					<label>
-						<span>
-							Nơi khai báo <span className='label-red'> (*)</span>:
-						</span>
-						<SelectOption
-							width={'100%'}
-							placeholder={'Nhập và chọn nơi khai báo'}
-							options={declarationPlaces}
-							getValueSelected={value => {
-								formik.setFieldValue('noiKhaiBao', value);
-							}}
-						/>
-					</label>
-				</div>
 
-				<div>
-					<label>
-						<span>
-							Số điện thoại <span className='label-red'> (*)</span>:
-						</span>
-						<Input type='number' {...formik.getFieldProps('soDienThoai')} />
-					</label>
-				</div>
+				<label>
+					<span>
+						Nơi khai báo <span className='label-red'> (*)</span>:
+					</span>
+					<SelectOption
+						width={'100%'}
+						placeholder={'Nhập và chọn nơi khai báo'}
+						options={declarationPlaces}
+						getValueSelected={value => {
+							formik.setFieldValue('declarationPlace', value);
+						}}
+					/>
+				</label>
+
+				<label>
+					<span>
+						Số điện thoại <span className='label-red'> (*)</span>:
+					</span>
+					<Input type='number' {...formik.getFieldProps('phoneNumber')} />
+				</label>
 
 				<label>
 					<span>
 						Họ và tên <span className='label-red'> (*)</span>:
 					</span>
-					<Input
-						type='text'
-						placeholder='Họ và tên'
-						// value={ten}
-						// onChange={({ target }) => setTen(target.value)}
-						{...formik.getFieldProps('ten')}
-					/>
+					<Input type='text' placeholder='Họ và tên' {...formik.getFieldProps('fullName')} />
 				</label>
+
 				<Row gutter={16}>
 					<Col className='gutter-row' span={12}>
 						<label>
@@ -288,10 +366,8 @@ export default function DeclarationForm() {
 							</span>
 							<DatePickerCustom
 								getValueSelected={value => {
-									formik.setFieldValue('namSinh', value);
+									formik.setFieldValue('dateOfBirth', value);
 								}}
-								// formik={formik}
-								// fieldName={'namSinh'}
 							/>
 						</label>
 					</Col>
@@ -301,39 +377,26 @@ export default function DeclarationForm() {
 							<span>
 								Giới tính <span className='label-red'> (*)</span>:
 							</span>
-							<Input
-								type='text'
-								// value={gioiTinh}
-								// onChange={({ target }) => setGioiTinh(target.value)}
-								{...formik.getFieldProps('gioiTinh')}
-							/>
+							<Input type='text' {...formik.getFieldProps('sex')} />
 						</label>
 					</Col>
 				</Row>
 
-				{/* display if type is 'Nhân viên bệnh viện' */}
-				{displayType && displayType === declarationTypes[1].value ? (
+				{formik.values.declarationType &&
+				formik.values.declarationType === declarationTypes[1].value ? (
 					<>
 						<label>
 							<span>Mã nhân viên:</span>
 							<Input
 								type='number'
 								placeholder='Mã nhân viên'
-								// value={maBenhNhan}
-								// onChange={({ target }) => setMaBenhNhan(target.value)}
-								{...formik.getFieldProps('maBenhNhan')}
+								{...formik.getFieldProps('patientCode')}
 							/>
 						</label>
 
 						<label>
 							<span>Khoa/phòng:</span>
-							<Input
-								type='text'
-								placeholder='Khoa/phòng'
-								// value={khoaPhong}
-								// onChange={({ target }) => setKhoaPhong(target.value)}
-								{...formik.getFieldProps('khoaPhong')}
-							/>
+							<Input type='text' placeholder='Khoa/phòng' {...formik.getFieldProps('department')} />
 						</label>
 					</>
 				) : null}
@@ -355,7 +418,7 @@ export default function DeclarationForm() {
 								options={nations}
 								defaultValue={'Việt Nam'}
 								getValueSelected={value => {
-									formik.setFieldValue('quocTichID', value);
+									formik.setFieldValue('national', value);
 								}}
 							/>
 						</label>
@@ -376,10 +439,9 @@ export default function DeclarationForm() {
 								width={'100'}
 								options={provinces}
 								getValueSelected={value => {
-									setProvinceSelected(value);
-									formik.setFieldValue('tinhThanh', value);
-									formik.setFieldValue('quanHuyen', null);
-									formik.setFieldValue('xaPhuong', null);
+									formik.setFieldValue('province', value);
+									formik.setFieldValue('district', null);
+									formik.setFieldValue('ward', null);
 								}}
 							/>
 						</label>
@@ -396,15 +458,14 @@ export default function DeclarationForm() {
 								Quận huyện <span className='label-red'> (*)</span>:
 							</span>
 							<SelectOption
-								disabled={formik.values.tinhThanh !== null ? false : true}
+								disabled={formik.values.province !== null ? false : true}
 								placeholder={'Quận huyện'}
 								width={'100'}
 								options={districts}
-								value={formik.values.quanHuyen}
+								value={formik.values.district}
 								getValueSelected={value => {
-									setDistrictSelected(value);
-									formik.setFieldValue('quanHuyen', value);
-									formik.setFieldValue('xaPhuong', null);
+									formik.setFieldValue('district', value);
+									formik.setFieldValue('ward', null);
 								}}
 							/>
 						</label>
@@ -421,13 +482,13 @@ export default function DeclarationForm() {
 								Xã phường <span className='label-red'> (*)</span>:
 							</span>
 							<SelectOption
-								disabled={formik.values.quanHuyen !== null ? false : true}
+								disabled={formik.values.district !== null ? false : true}
 								placeholder={'Xã phường'}
 								width={'100'}
 								options={wards}
-								value={formik.values.xaPhuong}
+								value={formik.values.ward}
 								getValueSelected={value => {
-									formik.setFieldValue('xaPhuong', value);
+									formik.setFieldValue('ward', value);
 								}}
 							/>
 						</label>
@@ -441,19 +502,18 @@ export default function DeclarationForm() {
 					<Input
 						type='text'
 						placeholder='Số nhà, tên đường'
-						// value={diaChi}
-						// onChange={({ target }) => setDiaChi(target.value)}
-						{...formik.getFieldProps('diaChi')}
+						{...formik.getFieldProps('houseNumber')}
 					/>
 				</label>
 
-				{/* display if type is 'Tiêm chủng vắc xin' hoặc 'Xét nghiệm Covid-19 */}
-				{displayType &&
-				(displayType === declarationTypes[3].value || displayType === declarationTypes[4].value) ? (
+				{formik.values.declarationType &&
+				(formik.values.declarationType === declarationTypes[3].value ||
+					formik.values.declarationType === declarationTypes[4].value ||
+					formik.values.declarationType === declarationTypes[5].value) ? (
 					<label>
 						<span>
 							CMND/CCCD
-							{displayType === declarationTypes[4].value ? (
+							{formik.values.declarationType === declarationTypes[4].value ? (
 								<span className='label-red'> (*)</span>
 							) : null}
 							:
@@ -461,15 +521,14 @@ export default function DeclarationForm() {
 						<Input
 							type='text'
 							placeholder='Nhập chính xác CMND/CCCD'
-							// value={maSinhVien}
-							// onChange={({ target }) => setMaSinhVien(target.value)}
-							{...formik.getFieldProps('maSinhVien')}
+							{...formik.getFieldProps('idCardNumber')}
 						/>
 					</label>
 				) : null}
-				{/* display if type is 'Xét nghiệm Covid-19' */}
-				{displayType &&
-				(displayType === declarationTypes[4].value || displayType === declarationTypes[5].value) ? (
+
+				{formik.values.declarationType &&
+				(formik.values.declarationType === declarationTypes[4].value ||
+					formik.values.declarationType === declarationTypes[5].value) ? (
 					<>
 						<p className='type-of-test-object-title'>
 							Ông/Bà hiện có mắc Covid-19 hoặc các trường hợp theo dõi sau đây không?:
@@ -479,7 +538,7 @@ export default function DeclarationForm() {
 								<input
 									type='radio'
 									name='type-of-test-object'
-									onChange={() => setTypeOfTestObject('no')}
+									onChange={() => formik.setFieldValue('typeOfTestObject', 'Không')}
 								/>
 								<span>Không</span>
 							</label>
@@ -488,7 +547,7 @@ export default function DeclarationForm() {
 								<input
 									type='radio'
 									name='type-of-test-object'
-									onChange={() => setTypeOfTestObject('yes')}
+									onChange={() => formik.setFieldValue('typeOfTestObject', 'Có')}
 								/>
 								<span>Có</span>
 							</label>
@@ -497,40 +556,61 @@ export default function DeclarationForm() {
 								<input
 									type='radio'
 									name='type-of-test-object'
-									onChange={() => setTypeOfTestObject('F1')}
+									onChange={() => formik.setFieldValue('typeOfTestObject', 'F1')}
 								/>
 								<span>F1</span>
 							</label>
 						</div>
 					</>
 				) : null}
-
-				{(displayType === declarationTypes[4].value || displayType === declarationTypes[5].value) &&
-				typeOfTestObject === 'yes' ? (
+				{(formik.values.declarationType === declarationTypes[4].value ||
+					formik.values.declarationType === declarationTypes[5].value) &&
+				formik.values.typeOfTestObject.trim().toLowerCase() === 'có' ? (
 					<>
 						<p className='place-of-test-object-title'>Nơi xét nghiệm:</p>
 						<div className='place-of-test-object'>
 							<label>
-								<input type='radio' name='place-of-test-object' />
+								<input
+									type='radio'
+									name='placeOfTest'
+									checked={formik.values.placeOfTest === 'Bệnh viện'}
+									onChange={() => formik.setFieldValue('placeOfTest', 'Bệnh viện')}
+								/>
 								<span>Bệnh viện</span>
 							</label>
 							<label>
-								<input type='radio' name='place-of-test-object' />
-								<span>Phòng khám tư nhâm</span>
+								<input
+									type='radio'
+									name='placeOfTest'
+									checked={formik.values.placeOfTest === 'Phòng khám tư nhân'}
+									onChange={() => formik.setFieldValue('placeOfTest', 'Phòng khám tư nhân')}
+								/>
+								<span>Phòng khám tư nhân</span>
 							</label>
 							<label>
-								<input type='radio' name='place-of-test-object' />
+								<input
+									type='radio'
+									name='placeOfTest'
+									checked={formik.values.placeOfTest === 'Khu phong tỏa'}
+									onChange={() => formik.setFieldValue('placeOfTest', 'Khu phong tỏa')}
+								/>
 								<span>Khu phong tỏa</span>
 							</label>
 							<label>
-								<input type='radio' name='place-of-test-object' />
+								<input
+									type='radio'
+									name='placeOfTest'
+									checked={formik.values.placeOfTest === 'Tự làm xét nghiệm tại nhà'}
+									onChange={() => formik.setFieldValue('placeOfTest', 'Tự làm xét nghiệm tại nhà')}
+								/>
 								<span>Tự làm xét nghiệm tại nhà</span>
 							</label>
 						</div>
 					</>
 				) : null}
 
-				{displayType && displayType === declarationTypes[5].value ? (
+				{formik.values.declarationType &&
+				formik.values.declarationType === declarationTypes[5].value ? (
 					<>
 						<p className='background-disease-title'>Ông/Bà có mắc bệnh nền hay không?:</p>
 						<div className='background-disease'>
@@ -538,54 +618,84 @@ export default function DeclarationForm() {
 								<input
 									type='radio'
 									name='background-disease'
-									onChange={() => setBackgroundDisease('no')}
+									onChange={() => setIsBackgroundDisease('Không')}
 								/>
 								<span>Không</span>
 							</label>
-
 							<label>
 								<input
 									type='radio'
 									name='background-disease'
-									onChange={() => setBackgroundDisease('yes')}
+									onChange={() => setIsBackgroundDisease('Có')}
 								/>
 								<span>Có</span>
 							</label>
 						</div>
 					</>
 				) : null}
-				{displayType &&
-				displayType === declarationTypes[5].value &&
-				backgroundDisease &&
-				backgroundDisease === 'yes' ? (
+				{formik.values.declarationType &&
+				formik.values.declarationType === declarationTypes[5].value &&
+				isBackgroundDisease &&
+				isBackgroundDisease === 'Có' ? (
 					<>
 						<p className='type-of-background-disease-title'>Chọn bệnh nền: </p>
 						<div className='type-of-background-disease'>
 							<label>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									onChange={({ target }) => {
+										formik.values.backgroundDisease.push(target.value);
+									}}
+									value='Thận mạn tính'
+								/>
 								<span>Thận mạn tính</span>
 							</label>
 							<label>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									onChange={({ target }) => {
+										formik.values.backgroundDisease.push(target.value);
+									}}
+									value='Tăng huyết áp'
+								/>
 								<span>Tăng huyết áp</span>
 							</label>
 							<label>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									onChange={({ target }) => {
+										formik.values.backgroundDisease.push(target.value);
+									}}
+									value='Đái tháo đường'
+								/>
 								<span>Đái tháo đường</span>
 							</label>
 							<label>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									onChange={({ target }) => {
+										formik.values.backgroundDisease.push(target.value);
+									}}
+									value='Bệnh phổi tắc nghẽn mạn tính'
+								/>
 								<span>Bệnh phổi tắc nghẽn mạn tính</span>
 							</label>
 							<label>
-								<input type='checkbox' />
+								<input
+									type='checkbox'
+									onChange={({ target }) => {
+										formik.values.backgroundDisease.push(target.value);
+									}}
+									value='Có tình trạng béo phì'
+								/>
 								<span>Có tình trạng béo phì</span>
 							</label>
 						</div>
 					</>
 				) : null}
 
-				{displayType && displayType === declarationTypes[5].value ? (
+				{formik.values.declarationType &&
+				formik.values.declarationType === declarationTypes[5].value ? (
 					<>
 						<p className='is-used-molnupiravir-title'>Ông/Bà có sử dụng thuốc Molnupiravir?:</p>
 						<div className='is-used-molnupiravir'>
@@ -609,9 +719,8 @@ export default function DeclarationForm() {
 						</div>
 					</>
 				) : null}
-
-				{displayType &&
-				displayType === declarationTypes[5].value &&
+				{formik.values.declarationType &&
+				formik.values.declarationType === declarationTypes[5].value &&
 				isUsedMolnupiravir &&
 				isUsedMolnupiravir === 'yes' ? (
 					<div className='used-molnupiravir'>
@@ -620,41 +729,67 @@ export default function DeclarationForm() {
 							<span className='label-red'> (*)</span>:
 						</div>
 						<div className='list-symptom-after-used-molnupiravir'>
-							{[
-								'Không',
-								'Nôn',
-								'Chóng mặt',
-								'Đau bụng',
-								'Đau tay chân',
-								'Buồn nôn',
-								'Tê tay chân',
-								'Nổi sần ngứa',
-								'Đau đầu',
-								'Đau lưng',
-								'Sổ mũi',
-								'Tiêu chảy',
-								'Yếu liệt tay chân',
-								'Triệu chứng khác'
-							].map((item, index, oldArray) => {
-								if (oldArray.length - 1 === index) {
-									return (
-										<label>
-											<span>Triệu chứng khác:</span>
-											<Input type='text' />
-										</label>
-									);
-								} else {
-									return (
-										<label>
-											<input type='checkbox' value={item} />
-											<span>{item}</span>
-										</label>
-									);
-								}
+							{symptomAfterUsedMolnupiravir.current.map((item, index, oldArray) => {
+								return (
+									<label key={item.id}>
+										<input
+											type='checkbox'
+											value={item.content}
+											onChange={onChangeSymptomAfterUsedMolnupiravir}
+											disabled={
+												item.content === 'Không' ? false : isDisableSymptomsAfterUsedMolnupiravir
+											}
+											checked={
+												isDisableSymptomsAfterUsedMolnupiravir && item.content === 'Không'
+													? isDisableSymptomsAfterUsedMolnupiravir
+													: null
+											}
+										/>
+										<span>{item.content}</span>
+									</label>
+								);
 							})}
+							<label>
+								<span>Triệu chứng khác:</span>
+								<Input
+									type='text'
+									disabled={isDisableSymptomsAfterUsedMolnupiravir}
+									{...formik.getFieldProps('anotherSymptoms')}
+								/>
+							</label>
 						</div>
 					</div>
 				) : null}
+
+				{formik.values.declarationType &&
+				formik.values.declarationType === declarationTypes[5].value ? (
+					<>
+						<Row gutter={16}>
+							<Col className='gutter-row' span={12}>
+								<label>
+									<span>Nhiệt độ cơ thể(ºC) :</span>
+									<Input
+										type='text'
+										placeholder='VD: 38.5'
+										{...formik.getFieldProps('bodyTemperature')}
+									/>
+								</label>
+							</Col>
+
+							<Col className='gutter-row' span={12}>
+								<label>
+									<span>Nồng độ SPO2 (%) :</span>
+									<Input
+										type='text'
+										placeholder='Nhập giá trị từ 30 -> 100 '
+										{...formik.getFieldProps('bloodOxygenLevel')}
+									/>
+								</label>
+							</Col>
+						</Row>
+					</>
+				) : null}
+
 				<div className='disease-symptoms'>
 					<div className='disease-symptoms-title'>
 						Ông/bà hiện có những triệu chứng hay biểu hiện nào sau đây không?
@@ -726,7 +861,7 @@ export default function DeclarationForm() {
 					<div className='captcha-title'>
 						Vui lòng nhập mã xác thực <span className='label-red'> (*)</span>:
 					</div>
-					<div className='captcha-text'>{codeRef.current}</div>
+					<div className='captcha-text'>{randomCaptchaCode.current}</div>
 					<Input
 						type='number'
 						className='captcha-code'
