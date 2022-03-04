@@ -16,6 +16,7 @@ a {
 
 .app-bar-wrapper {
 	background-color: $color-blue;
+  min-width: 460px;
 	.app-bar {
 		display: flex;
 		align-items: center;
