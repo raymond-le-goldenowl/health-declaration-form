@@ -3,14 +3,16 @@ import React, { useState } from 'react';
 
 import './styles.scss';
 
-const { AntOption = Option } = AntSelect;
+const AntSelectOption = AntSelect.Option;
 
-export default function SelectOption({
+export default function Select({
 	options,
 	getValueSelected,
 	width,
 	placeholder,
-	defaultValue = ''
+	defaultValue = '',
+	disabled = false,
+	value
 }) {
 	const [isArrowUp, setIsArrowUp] = useState(false);
 
@@ -35,13 +37,19 @@ export default function SelectOption({
 				filterSort={(optionA, optionB) =>
 					optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
 				}
-				defaultValue={defaultValue}
+				defaultValue={defaultValue || null}
+				disabled={disabled}
+				value={value}
 			>
 				{options &&
 					options.map(option => (
-						<AntOption key={option.key} value={option.value} style={{ fontSize: '1rem' }}>
+						<AntSelectOption
+							key={option.key}
+							value={JSON.stringify(option)}
+							style={{ fontSize: '1rem' }}
+						>
 							{option.text}
-						</AntOption>
+						</AntSelectOption>
 					))}
 			</AntSelect>
 			<span
