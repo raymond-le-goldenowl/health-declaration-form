@@ -14,7 +14,7 @@ moment.updateLocale('vn', {
 });
 
 export default function DatePickerCustom({ defaultDateTime, onChange }) {
-	const handleOnchange = value => onChange && onChange(moment(value).format(DATE_FORMAT));
+	const handleOnchange = value => onChange?.(moment(value).format(DATE_FORMAT));
 
 	return (
 		<ConfigProvider locale={viVN}>
