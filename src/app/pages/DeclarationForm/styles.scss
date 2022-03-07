@@ -361,3 +361,14 @@
 		}
 	}
 }
+
+.ant-modal-content {
+  .ant-modal-close-x {
+    display: none;
+  }
+  .ant-modal-footer {
+    button.ant-btn:first-child {
+      display: none;
+    }
+  }
+}
