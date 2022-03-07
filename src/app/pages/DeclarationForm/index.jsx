@@ -139,9 +139,8 @@ export default function DeclarationForm() {
 		onSubmit: values => {
 			if (validate(values)) {
 				// Save to localStorage
-				// console.log(values);
-				// localStorage.setItem('info', JSON.stringify(values));
-				// localStorage.setItem(values.phoneNumber, JSON.stringify(values));
+				localStorage.setItem('info', JSON.stringify(values));
+				localStorage.setItem(values.phoneNumber, JSON.stringify(values));
 
 				// Save to database.
 				axios
@@ -151,7 +150,7 @@ export default function DeclarationForm() {
 							showModal();
 						}
 					})
-					.catch(err => console.log(err));
+					.catch(err => notificationCustom({ type: 'danger', message: err.message }));
 			}
 		}
 	});
@@ -185,7 +184,7 @@ export default function DeclarationForm() {
 				});
 				setStateDeclarationTypes(resultConvert);
 			})
-			.catch(err => console.err);
+			.catch(err => notificationCustom({ type: 'danger', message: err.message }));
 
 		axios.get(diseaseSymptomsUrl).then(resp => {
 			formik.setFieldValue('diseaseSymptoms', resp.data?.objects || []);
@@ -341,10 +340,8 @@ export default function DeclarationForm() {
 				otp_code: formik.values.otpCode
 			});
 
-			console.log(userSaved);
 			if (userSaved.data?.success) {
 				const declarationTypeId = stateDeclarationTypes.filter(item => {
-					console.log(item.value, formik.values.declarationType);
 					return item.value === formik.values.declarationType;
 				})[0].id;
 
@@ -361,24 +358,33 @@ export default function DeclarationForm() {
 					user_phone_number: formik.values.phoneNumber,
 					declaration_type_id: declarationTypeId
 				};
-				console.log(newResultDeclarationForm);
 
 				const resultDeclarationFormSaved = await axios.post(
 					`${ORIGIN_URL}result-declaration/create`,
 					newResultDeclarationForm
 				);
 
-				console.log(resultDeclarationFormSaved);
 				if (resultDeclarationFormSaved.data.success) {
 					setTimeout(() => {
+						notificationCustom({
+							type: 'success',
+							message: resultDeclarationFormSaved.data.message
+						});
 						setIsModalVisible(false);
-					}, 3000);
+
+						// Reaload page after display success saved message
+						setTimeout(() => {
+							window.location.reload();
+						}, 900);
+					}, 1500);
+				} else {
+					notificationCustom({ message: resultDeclarationFormSaved.data.message });
 				}
 			} else {
 				notificationCustom({ message: userSaved.data.message });
 			}
-		} catch (error) {
-			console.error(error);
+		} catch (err) {
+			notificationCustom({ type: 'danger', message: err.message });
 		}
 	};
 
