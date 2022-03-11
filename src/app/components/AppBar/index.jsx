@@ -1,12 +1,15 @@
 import React from 'react';
 
 import { Dropdown, Menu } from 'antd';
-import { ClockCircleOutlined, FileAddOutlined, MenuOutlined } from '@ant-design/icons/lib/icons';
+import { MenuOutlined } from '@ant-design/icons/lib/icons';
+
+import { routes } from 'app/config/router';
 
 import textLogoBoYTe from 'app/assets/images/textLogoBoYTe.png';
 import imageLogoBoYTe from 'app/assets/images/imageLogoBoYTe.png';
 
 import './styles.scss';
+import { Link } from 'react-router-dom';
 
 export default function AppBar() {
 	return (
@@ -30,18 +33,17 @@ export default function AppBar() {
 						placement='bottomRight'
 						overlay={
 							<Menu className='menu-links'>
-								<Menu.Item key='0'>
-									<a href='#!'>
-										<FileAddOutlined />
-										<span className='link-text'>Khai báo y tế</span>
-									</a>
-								</Menu.Item>
-								<Menu.Item key='1'>
-									<a href='#!'>
-										<ClockCircleOutlined />
-										<span className='link-text'>Lịch sử khai báo</span>
-									</a>
-								</Menu.Item>
+								{Object.values(routes).map(
+									route =>
+										route.content && (
+											<Menu.Item key={route.id}>
+												<Link to={route.path}>
+													{route.icon}
+													<span className='link-text'>{route.content}</span>
+												</Link>
+											</Menu.Item>
+										)
+								)}
 							</Menu>
 						}
 						trigger={['click']}

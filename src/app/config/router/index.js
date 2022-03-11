@@ -3,6 +3,7 @@ import React, { lazy } from 'react';
 import { nanoid } from 'nanoid';
 import { createBrowserHistory } from 'history';
 import { Navigate, Route, Routes } from 'react-router';
+import { ClockCircleOutlined, FileAddOutlined } from '@ant-design/icons/lib/icons';
 
 const HistoryPage = lazy(() => import('app/pages/HistoryPage'));
 const DeclarationForm = lazy(() => import('app/pages/DeclarationForm'));
@@ -11,21 +12,23 @@ const DeclarationFormWrapper = lazy(() => import('app/Layouts/declarationFormWra
 export const history = createBrowserHistory();
 
 export const routes = {
-	historyPage: {
-		id: nanoid(4),
-		path: '/history',
-		exact: true,
-		component: HistoryPage,
-		layout: DeclarationFormWrapper,
-		content: ' Declaration History'
-	},
 	declarationForm: {
 		id: nanoid(4),
 		path: '/declaration-form',
 		exact: true,
 		component: DeclarationForm,
 		layout: DeclarationFormWrapper,
-		content: 'Declaration Form'
+		content: 'Khai báo y tế',
+		icon: <FileAddOutlined />
+	},
+	historyPage: {
+		id: nanoid(4),
+		path: '/history',
+		exact: true,
+		component: HistoryPage,
+		layout: DeclarationFormWrapper,
+		content: 'Lịch sử khai báo',
+		icon: <ClockCircleOutlined />
 	},
 	default: {
 		id: nanoid(4),
