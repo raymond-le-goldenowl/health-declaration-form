@@ -142,9 +142,44 @@ export default function DeclarationForm() {
 				localStorage.setItem('info', JSON.stringify(values));
 				localStorage.setItem(values.phoneNumber, JSON.stringify(values));
 
+				// get declaration type id.
+				const declarationTypeId = stateDeclarationTypes.filter(item => {
+					return item.value === formik.values.declarationType;
+				})[0].id;
+
+				// create object values save to database.
+				const newResultDeclarationForm = {
+					// info user.
+					phone_number: String(formik.values.phoneNumber),
+					full_name: formik.values.fullName,
+					date_of_birth: formik.values.dateOfBirth,
+					sex: formik.values.sex,
+					employee_code: formik.values.employeeCode,
+					department: formik.values.department,
+					national: formik.values.national,
+					province: formik.values.province,
+					district: formik.values.district,
+					ward: formik.values.ward,
+					house_number: formik.values.houseNumber,
+					id_card_number: formik.values.idCardNumber,
+					otp_code: formik.values.otpCode,
+					// info declaration of user.
+					declaration_place: formik.values.declarationPlace,
+					place_of_test: formik.values.placeOfTest,
+					background_disease: JSON.stringify(formik.values.backgroundDisease),
+					symptoms_used_molnupiravir: JSON.stringify(formik.values.SymptomsAfterUsedMolnupiravir),
+					body_temperature: formik.values.bodyTemperature,
+					blood_oxygen_level: formik.values.bloodOxygenLevel,
+					disease_symptoms: JSON.stringify(formik.values.diseaseSymptoms),
+					epidemiological_factors: JSON.stringify(formik.values.epidemiologicalFactors),
+					other_symptoms: formik.values.otherSymptoms,
+					// user_phone_number: formik.values.phoneNumber, just using phone_number key to get on server.
+					declaration_type_id: declarationTypeId
+				};
+
 				// Save to database.
 				axios
-					.post(`${ORIGIN_URL}user/request-save`, { phone_number: String(values.phoneNumber) })
+					.post(`${ORIGIN_URL}user/request-save`, newResultDeclarationForm)
 					.then(res => {
 						if (res.data.success) {
 							showModal();
@@ -400,14 +435,12 @@ export default function DeclarationForm() {
 		const value = event.target.value;
 
 		const newArray = formik.values.diseaseSymptoms.map((item, index) => {
-			if (
-				Number(id) === item.id &&
-				value.trim().toLocaleLowerCase() === 'Có'.trim().toLocaleLowerCase()
-			) {
+			if (id === item.id && value.trim().toLocaleLowerCase() === 'Có'.trim().toLocaleLowerCase()) {
 				return { ...item, isChecked: true };
 			}
 			return { ...item };
 		});
+
 		formik.setFieldValue('diseaseSymptoms', newArray);
 	};
 
@@ -416,14 +449,12 @@ export default function DeclarationForm() {
 		const value = event.target.value;
 
 		const newArray = formik.values.epidemiologicalFactors.map((item, index) => {
-			if (
-				Number(id) === item.id &&
-				value.trim().toLocaleLowerCase() === 'Có'.trim().toLocaleLowerCase()
-			) {
+			if (id === item.id && value.trim().toLocaleLowerCase() === 'Có'.trim().toLocaleLowerCase()) {
 				return { ...item, isChecked: true };
 			}
 			return { ...item };
 		});
+
 		formik.setFieldValue('epidemiologicalFactors', newArray);
 	};
 
