@@ -156,8 +156,8 @@ export default function DeclarationForm() {
 	});
 
 	useEffect(() => {
-		const diseaseSymptomsUrl = `https://kbyt.khambenh.gov.vn/api/v1/trieuchung?q={%22filters%22:{%22$and%22:[{%22trangthai%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22thutu_uutien%22,%22direction%22:%22asc%22}]}`;
-		const epidemiologicalFactorsUrl = `https://kbyt.khambenh.gov.vn/api/v1/dichte?q={%22filters%22:{%22$and%22:[{%22trangthai%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22thutu_uutien%22,%22direction%22:%22asc%22}]}`;
+		const diseaseSymptomsUrl = `${ORIGIN_URL}symptoms`;
+		const epidemiologicalFactorsUrl = `${ORIGIN_URL}epidemiological-factors`;
 		const nationUrl = `https://kbyt.khambenh.gov.vn/api/v1/quocgia?results_per_page=1000&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
 		const provincesUrl = `https://kbyt.khambenh.gov.vn/api/v1/tinhthanh?results_per_page=100&q={%22filters%22:{%22$and%22:[{%22deleted%22:{%22$eq%22:false}},{%22active%22:{%22$eq%22:1}}]},%22order_by%22:[{%22field%22:%22ten%22,%22direction%22:%22asc%22}]}`;
 		const healthDeclarationTypes = `${ORIGIN_URL}health-declaration-types/`;
@@ -186,11 +186,13 @@ export default function DeclarationForm() {
 			})
 			.catch(err => notificationCustom({ type: 'danger', message: err.message }));
 
-		axios.get(diseaseSymptomsUrl).then(resp => {
-			formik.setFieldValue('diseaseSymptoms', resp.data?.objects || []);
+		axios.get(diseaseSymptomsUrl).then(res => {
+			const data = res.data.map(item => ({ ...item, isChecked: false }));
+			formik.setFieldValue('diseaseSymptoms', data);
 		});
-		axios.get(epidemiologicalFactorsUrl).then(resp => {
-			formik.setFieldValue('epidemiologicalFactors', resp.data?.objects || []);
+		axios.get(epidemiologicalFactorsUrl).then(res => {
+			const data = res.data.map(item => ({ ...item, isChecked: false }));
+			formik.setFieldValue('epidemiologicalFactors', data);
 		});
 		axios.get(nationUrl).then(resp => {
 			const data = resp.data?.objects.map(nation => {
@@ -374,8 +376,8 @@ export default function DeclarationForm() {
 
 						// Reaload page after display success saved message
 						setTimeout(() => {
-							window.location.reload();
-						}, 900);
+							// window.location.reload();
+						}, 1200);
 					}, 1500);
 				} else {
 					notificationCustom({ message: resultDeclarationFormSaved.data.message });
@@ -386,6 +388,38 @@ export default function DeclarationForm() {
 		} catch (err) {
 			notificationCustom({ type: 'danger', message: err.message });
 		}
+	};
+
+	const handleSelectRadioDiseaseSymptom = event => {
+		const id = event.target.dataset.id;
+		const value = event.target.value;
+
+		const newArray = formik.values.diseaseSymptoms.map((item, index) => {
+			if (
+				Number(id) === item.id &&
+				value.trim().toLocaleLowerCase() === 'Có'.trim().toLocaleLowerCase()
+			) {
+				return { ...item, isChecked: true };
+			}
+			return { ...item };
+		});
+		formik.setFieldValue('diseaseSymptoms', newArray);
+	};
+
+	const handleSelectRadioEpidemiologicalFactor = event => {
+		const id = event.target.dataset.id;
+		const value = event.target.value;
+
+		const newArray = formik.values.epidemiologicalFactors.map((item, index) => {
+			if (
+				Number(id) === item.id &&
+				value.trim().toLocaleLowerCase() === 'Có'.trim().toLocaleLowerCase()
+			) {
+				return { ...item, isChecked: true };
+			}
+			return { ...item };
+		});
+		formik.setFieldValue('epidemiologicalFactors', newArray);
 	};
 
 	return (
@@ -920,17 +954,29 @@ export default function DeclarationForm() {
 							</tr>
 						</thead>
 						<tbody>
-							{formik.values.diseaseSymptoms.map(diseaseSymptom => (
+							{formik.values.diseaseSymptoms.map((diseaseSymptom, index) => (
 								<tr key={diseaseSymptom.id}>
 									<td>
-										{diseaseSymptom.ten}
+										{diseaseSymptom.content}
 										<span className='label-red'> (*)</span>
 									</td>
 									<td>
-										<input type='radio' name={diseaseSymptom.id} />
+										<input
+											onChange={handleSelectRadioDiseaseSymptom}
+											data-id={diseaseSymptom.id}
+											type='radio'
+											value={'Có'}
+											checked={diseaseSymptom.isChecked === true ? true : false}
+										/>
 									</td>
 									<td>
-										<input defaultChecked type='radio' name={diseaseSymptom.id} />
+										<input
+											onChange={handleSelectRadioDiseaseSymptom}
+											data-id={diseaseSymptom.id}
+											checked={diseaseSymptom.isChecked === true ? false : true}
+											type='radio'
+											value={'Không'}
+										/>
 									</td>
 								</tr>
 							))}
@@ -955,14 +1001,26 @@ export default function DeclarationForm() {
 							{formik.values.epidemiologicalFactors.map(epidemiologicalFactor => (
 								<tr key={epidemiologicalFactor.id}>
 									<td>
-										{epidemiologicalFactor.ten}
+										{epidemiologicalFactor.content}
 										<span className='label-red'> (*)</span>
 									</td>
 									<td>
-										<input type='radio' value='Không' name={epidemiologicalFactor.id} />
+										<input
+											onChange={handleSelectRadioEpidemiologicalFactor}
+											data-id={epidemiologicalFactor.id}
+											checked={epidemiologicalFactor.isChecked === true ? true : false}
+											type='radio'
+											value={'Có'}
+										/>
 									</td>
 									<td>
-										<input defaultChecked type='radio' value='Có' name={epidemiologicalFactor.id} />
+										<input
+											type='radio'
+											onChange={handleSelectRadioEpidemiologicalFactor}
+											data-id={epidemiologicalFactor.id}
+											value='Không'
+											checked={epidemiologicalFactor.isChecked === true ? false : true}
+										/>
 									</td>
 								</tr>
 							))}
