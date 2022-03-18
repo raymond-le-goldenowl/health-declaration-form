@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import { useFormik } from 'formik';
-import { Col, Input, Modal, Row } from 'antd';
+import { Col, Input, Row } from 'antd';
 import { SyncOutlined } from '@ant-design/icons/lib/icons';
 
 import { ORIGIN_URL } from 'app/config/http-links';
@@ -136,56 +136,73 @@ export default function DeclarationForm() {
 
 			otpCode: null
 		},
-		onSubmit: values => {
+		onSubmit: async values => {
 			if (validate(values)) {
-				// Save to localStorage
-				localStorage.setItem('info', JSON.stringify(values));
-				localStorage.setItem(values.phoneNumber, JSON.stringify(values));
+				try {
+					// get declaration type id.
+					const declarationTypeId = stateDeclarationTypes.filter(item => {
+						return item.value === formik.values.declarationType;
+					})[0].id;
 
-				// get declaration type id.
-				const declarationTypeId = stateDeclarationTypes.filter(item => {
-					return item.value === formik.values.declarationType;
-				})[0].id;
+					// create object values save to database.
+					const newResultDeclarationForm = {
+						// info user.
+						phone_number: String(formik.values.phoneNumber),
+						full_name: formik.values.fullName,
+						date_of_birth: formik.values.dateOfBirth,
+						sex: formik.values.sex,
+						employee_code: formik.values.employeeCode,
+						department: formik.values.department,
+						national: formik.values.national,
+						province: formik.values.province,
+						district: formik.values.district,
+						ward: formik.values.ward,
+						house_number: formik.values.houseNumber,
+						id_card_number: formik.values.idCardNumber,
+						otp_code: formik.values.otpCode,
+						// info declaration of user.
+						declaration_place: formik.values.declarationPlace,
+						place_of_test: formik.values.placeOfTest,
+						background_disease: JSON.stringify(formik.values.backgroundDisease),
+						symptoms_used_molnupiravir: JSON.stringify(formik.values.SymptomsAfterUsedMolnupiravir),
+						body_temperature: formik.values.bodyTemperature,
+						blood_oxygen_level: formik.values.bloodOxygenLevel,
+						disease_symptoms: JSON.stringify(formik.values.diseaseSymptoms),
+						epidemiological_factors: JSON.stringify(formik.values.epidemiologicalFactors),
+						other_symptoms: formik.values.otherSymptoms,
+						// user_phone_number: formik.values.phoneNumber, just using phone_number key to get on server.
+						declaration_type_id: declarationTypeId
+					};
 
-				// create object values save to database.
-				const newResultDeclarationForm = {
-					// info user.
-					phone_number: String(formik.values.phoneNumber),
-					full_name: formik.values.fullName,
-					date_of_birth: formik.values.dateOfBirth,
-					sex: formik.values.sex,
-					employee_code: formik.values.employeeCode,
-					department: formik.values.department,
-					national: formik.values.national,
-					province: formik.values.province,
-					district: formik.values.district,
-					ward: formik.values.ward,
-					house_number: formik.values.houseNumber,
-					id_card_number: formik.values.idCardNumber,
-					otp_code: formik.values.otpCode,
-					// info declaration of user.
-					declaration_place: formik.values.declarationPlace,
-					place_of_test: formik.values.placeOfTest,
-					background_disease: JSON.stringify(formik.values.backgroundDisease),
-					symptoms_used_molnupiravir: JSON.stringify(formik.values.SymptomsAfterUsedMolnupiravir),
-					body_temperature: formik.values.bodyTemperature,
-					blood_oxygen_level: formik.values.bloodOxygenLevel,
-					disease_symptoms: JSON.stringify(formik.values.diseaseSymptoms),
-					epidemiological_factors: JSON.stringify(formik.values.epidemiologicalFactors),
-					other_symptoms: formik.values.otherSymptoms,
-					// user_phone_number: formik.values.phoneNumber, just using phone_number key to get on server.
-					declaration_type_id: declarationTypeId
-				};
+					// save data with seding post request using axios.
+					const resultDeclarationFormSaved = await axios.post(
+						`${ORIGIN_URL}result-declaration/create`,
+						newResultDeclarationForm
+					);
 
-				// Save to database.
-				axios
-					.post(`${ORIGIN_URL}user/request-save`, newResultDeclarationForm)
-					.then(res => {
-						if (res.data.success) {
-							showModal();
-						}
-					})
-					.catch(err => notificationCustom({ type: 'danger', message: err.message }));
+					// showing notification if success saved data.
+					if (resultDeclarationFormSaved.data.success) {
+						setTimeout(() => {
+							notificationCustom({
+								type: 'success',
+								message: resultDeclarationFormSaved.data.message
+							});
+
+							// reset data otp.
+							formik.setFieldValue('otpCode', null);
+
+							// Reaload page after display success saved message
+							setTimeout(() => {
+								// reload page or render all of declaration form before.
+								// window.location.reload();
+							}, 1200);
+						}, 1500);
+					} else {
+						notificationCustom({ message: resultDeclarationFormSaved.data.message });
+					}
+				} catch (err) {
+					notificationCustom({ type: 'danger', message: err.message });
+				}
 			}
 		}
 	});
@@ -353,83 +370,6 @@ export default function DeclarationForm() {
 		}
 	};
 
-	const [isModalVisible, setIsModalVisible] = useState(false);
-
-	const showModal = () => {
-		setIsModalVisible(true);
-	};
-
-	const handleOk = async () => {
-		try {
-			// get declaration type id.
-			const declarationTypeId = stateDeclarationTypes.filter(item => {
-				return item.value === formik.values.declarationType;
-			})[0].id;
-
-			// create object values save to database.
-			const newResultDeclarationForm = {
-				// info user.
-				phone_number: String(formik.values.phoneNumber),
-				full_name: formik.values.fullName,
-				date_of_birth: formik.values.dateOfBirth,
-				sex: formik.values.sex,
-				employee_code: formik.values.employeeCode,
-				department: formik.values.department,
-				national: formik.values.national,
-				province: formik.values.province,
-				district: formik.values.district,
-				ward: formik.values.ward,
-				house_number: formik.values.houseNumber,
-				id_card_number: formik.values.idCardNumber,
-				otp_code: formik.values.otpCode,
-				// info declaration of user.
-				declaration_place: formik.values.declarationPlace,
-				place_of_test: formik.values.placeOfTest,
-				background_disease: JSON.stringify(formik.values.backgroundDisease),
-				symptoms_used_molnupiravir: JSON.stringify(formik.values.SymptomsAfterUsedMolnupiravir),
-				body_temperature: formik.values.bodyTemperature,
-				blood_oxygen_level: formik.values.bloodOxygenLevel,
-				disease_symptoms: JSON.stringify(formik.values.diseaseSymptoms),
-				epidemiological_factors: JSON.stringify(formik.values.epidemiologicalFactors),
-				other_symptoms: formik.values.otherSymptoms,
-				// user_phone_number: formik.values.phoneNumber, just using phone_number key to get on server.
-				declaration_type_id: declarationTypeId
-			};
-
-			// save data with seding post request using axios.
-			const resultDeclarationFormSaved = await axios.post(
-				`${ORIGIN_URL}result-declaration/create`,
-				newResultDeclarationForm
-			);
-
-			// showing notification if success saved data.
-			if (resultDeclarationFormSaved.data.success) {
-				setTimeout(() => {
-					notificationCustom({
-						type: 'success',
-						message: resultDeclarationFormSaved.data.message
-					});
-
-					// close otp model.
-					setIsModalVisible(false);
-
-					// reset data otp.
-					formik.setFieldValue('otpCode', null);
-
-					// Reaload page after display success saved message
-					setTimeout(() => {
-						// reload page or render all of declaration form before.
-						// window.location.reload();
-					}, 1200);
-				}, 1500);
-			} else {
-				notificationCustom({ message: resultDeclarationFormSaved.data.message });
-			}
-		} catch (err) {
-			notificationCustom({ type: 'danger', message: err.message });
-		}
-	};
-
 	const handleSelectRadioDiseaseSymptom = event => {
 		const id = event.target.dataset.id;
 		const value = event.target.value;
@@ -460,21 +400,6 @@ export default function DeclarationForm() {
 
 	return (
 		<div id='declaration-form'>
-			<Modal
-				title='Enter your OTP code!'
-				visible={isModalVisible}
-				onOk={handleOk}
-				maskClosable={false}
-			>
-				<label>
-					<Input
-						type='number'
-						value={formik.values.otpCode}
-						onChange={({ target }) => formik.setFieldValue('otpCode', target.value)}
-					/>
-				</label>
-			</Modal>
-
 			<h2 className='title-blue'>SỞ Y TẾ TP. HỒ CHÍ MINH</h2>
 
 			<h3 className='title-red'>

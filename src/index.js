@@ -5,13 +5,17 @@ import * as serviceWorker from './serviceWorker';
 
 import { history, renderRouteConfigs, routes } from 'app/config/router';
 
+import { AuthContextProvider } from 'app/contexts/AuthContextProvider';
+
 import './index.scss';
 import 'antd/dist/antd.css';
 
 ReactDOM.render(
-	<Suspense fallback={<p>Loading ...</p>}>
-		<BrowserRouter history={history}>{renderRouteConfigs(routes)}</BrowserRouter>
-	</Suspense>,
+	<AuthContextProvider>
+		<Suspense fallback={<p>Loading ...</p>}>
+			<BrowserRouter history={history}>{renderRouteConfigs(routes)}</BrowserRouter>
+		</Suspense>
+	</AuthContextProvider>,
 	document.getElementById('root')
 );
 

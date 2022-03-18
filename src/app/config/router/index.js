@@ -5,6 +5,8 @@ import { createBrowserHistory } from 'history';
 import { Navigate, Route, Routes } from 'react-router';
 import { ClockCircleOutlined, FileAddOutlined } from '@ant-design/icons/lib/icons';
 
+const Login = lazy(() => import('app/pages/Login'));
+const RequireAuth = lazy(() => import('app/components/RequireAuth'));
 const HistoryPage = lazy(() => import('app/pages/HistoryPage'));
 const DeclarationForm = lazy(() => import('app/pages/DeclarationForm'));
 const DeclarationFormWrapper = lazy(() => import('app/Layouts/declarationFormWrapper'));
@@ -39,21 +41,32 @@ export const routes = {
 
 export const renderRouteConfigs = routes => (
 	<Routes>
-		{Object.values(routes).map(route => {
-			const Layout = route.layout || React.Fragment;
-
-			return (
-				<Route
-					key={route.id}
-					path={route.path}
-					exact={route.exact}
-					element={
-						<Layout>
-							<route.component />
-						</Layout>
-					}
-				/>
-			);
-		})}
+		<Route element={<RequireAuth />}>
+			{Object.values(routes).map(route => {
+				const Layout = route.layout || React.Fragment;
+				return (
+					<Route
+						key={route.id}
+						path={route.path}
+						exact={route.exact}
+						element={
+							<Layout>
+								<route.component />
+							</Layout>
+						}
+					/>
+				);
+			})}
+		</Route>
+		<Route
+			key={nanoid(4)}
+			path={'/login'}
+			exact={true}
+			element={
+				<>
+					<Login />
+				</>
+			}
+		/>
 	</Routes>
 );
