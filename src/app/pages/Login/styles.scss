@@ -1,0 +1,30 @@
+@import '../../../index.scss';
+
+#login-form {
+	width: 50%;
+	margin: 0 auto;
+	transform: translate(0, 100%);
+
+	label {
+		h2 {
+			font-size: 4vw;
+			text-align: center;
+		}
+		input {
+			font-size: 3vw;
+			border-radius: 8px;
+			color: $color-blue;
+		}
+	}
+	button {
+		border-radius: 8px;
+		margin-top: 20px;
+		font-size: 2.5vw;
+		width: 100%;
+		outline: none;
+		border: none;
+		color: $color-white;
+		background-color: $color-teal;
+		cursor: pointer;
+	}
+}
