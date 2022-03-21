@@ -1,0 +1,20 @@
+export const OBJECT_KEYS_EN_TO_VN = {
+	declaration_place: 'Nơi khai báo',
+	place_of_test: 'Nơi kiểm tra',
+	background_disease: 'Bệnh nền',
+	symptoms_used_molnupiravir: 'Dấu hiệu sau khi dùng Molnupiravir',
+	body_temperature: 'Nhiệt độ cơ thể',
+	blood_oxygen_level: 'Nòng độ SPO2',
+	disease_symptoms: 'Triệu chứng bệnh',
+	epidemiological_factors: 'Yếu tố dịch tể ',
+	other_symptoms: 'Các dấu hiệu khác',
+	phone_number: 'Số điện thoại',
+	full_name: 'Họ và tên',
+	date_of_birth: 'Ngày sinh',
+	sex: 'Giới tính',
+	national: 'Quốc tịch',
+	province: 'Tỉnh thành',
+	district: 'Quận huyện',
+	ward: 'Xã phường',
+	house_number: 'Số nhà, tên đường'
+};

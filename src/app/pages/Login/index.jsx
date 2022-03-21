@@ -34,9 +34,9 @@ export default function Login() {
 		if (otpCode) {
 			const resultFetchIsAuth = await fetchIsAuth(phoneNumber, otpCode);
 			if (resultFetchIsAuth) {
+				setOtpCode(null);
+				setPhoneNumber(null);
 			}
-			setOtpCode(null);
-			setPhoneNumber(null);
 		}
 	};
 
