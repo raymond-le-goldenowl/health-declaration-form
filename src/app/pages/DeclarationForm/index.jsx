@@ -476,7 +476,6 @@ export default function DeclarationForm() {
 			</Modal>
 
 			<h2 className='title-blue'>SỞ Y TẾ TP. HỒ CHÍ MINH</h2>
-
 			<h3 className='title-red'>
 				KHAI BÁO THÔNG TIN SAI LÀ VI PHẠM PHÁP LUẬT VIỆT NAM VÀ CÓ THỂ XỬ LÝ HÌNH SỰ
 			</h3>
@@ -1019,7 +1018,6 @@ export default function DeclarationForm() {
 						</tbody>
 					</table>
 				</div>
-
 				<div className='epidemiological-factors'>
 					<div className='epidemiological-factors-title'>
 						Trong thời gian vừa qua <span className='label-red'> (*)</span>:
@@ -1063,14 +1061,12 @@ export default function DeclarationForm() {
 						</tbody>
 					</table>
 				</div>
-
 				<TextArea
 					placeholder='Vui lòng cung cấp thêm thông tin về triệu chứng hay dấu hiệu khác nếu có'
 					className='more-info'
 					rows={2}
 					{...formik.getFieldProps('otherSymptoms')}
 				></TextArea>
-
 				<div className='captcha'>
 					<div className='captcha-title'>
 						Vui lòng nhập mã xác thực <span className='label-red'> (*)</span>:
