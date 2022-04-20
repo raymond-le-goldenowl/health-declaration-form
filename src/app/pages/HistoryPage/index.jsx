@@ -11,6 +11,7 @@ import { notificationCustom } from 'app/utils/notificationCustom';
 import { DATE_FORMAT } from 'app/components/DatePickerCustom/constants';
 
 import './styles.scss';
+import { Link } from 'react-router-dom';
 
 export default function HistoryPage() {
 	const { auth } = useAuth();
@@ -38,6 +39,7 @@ export default function HistoryPage() {
 
 						return {
 							key: resultItem.id,
+							viewDetail: <Link to={`/detail/${resultItem.id}`}>Chi tiết</Link>,
 							...userFinded,
 							userCreatedAt: moment(userFinded.createdAt).format(DATE_FORMAT),
 							userUpdatedAt: moment(userFinded.updatedAt).format(DATE_FORMAT),
@@ -78,6 +80,11 @@ export default function HistoryPage() {
 			title: 'Thời gian khai báo',
 			dataIndex: 'resultCreatedAt',
 			key: 'resultCreatedAt'
+		},
+		{
+			title: 'Chi tiết',
+			dataIndex: 'viewDetail',
+			key: 'viewDetail'
 		}
 	];
 

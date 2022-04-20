@@ -1,0 +1,44 @@
+@import '../../../index.scss';
+
+#detail-page {
+	margin: 0 15px;
+
+	.title {
+		text-align: center;
+		text-transform: uppercase;
+		color: $color-blue;
+		font-weight: 600;
+		margin: 15px 0;
+	}
+
+	.result-detail {
+		border: 1px solid $color-gray;
+		padding: 0 15px;
+
+		.username {
+			text-align: center;
+			font-size: 2.5vw;
+			font-weight: 600;
+			margin-top: 15px;
+			margin-bottom: 15px;
+		}
+
+		.list-info {
+			div {
+				margin: 0 0 5px 0;
+			}
+		}
+
+		.more-info {
+			color: $color-red;
+			.bold {
+				font-weight: 600;
+			}
+		}
+
+		.btn-center {
+			margin-bottom: 20px;
+			text-align: center;
+		}
+	}
+}

@@ -14,12 +14,15 @@ import SelectOption from 'app/components/Select';
 import DatePickerCustom from 'app/components/DatePickerCustom';
 
 import './styles.scss';
+import useAuth from 'app/hooks/useAuth';
 
 const makeCaptchaNumbers = (min = 1000, max = 99999) => {
 	return Math.floor(Math.random() * (max - min) + min);
 };
 
 export default function DeclarationForm() {
+	const { auth } = useAuth();
+
 	const { TextArea } = Input;
 
 	const [wards, setWards] = useState([]);
@@ -171,7 +174,8 @@ export default function DeclarationForm() {
 						epidemiological_factors: JSON.stringify(formik.values.epidemiologicalFactors),
 						other_symptoms: formik.values.otherSymptoms,
 						// user_phone_number: formik.values.phoneNumber, just using phone_number key to get on server.
-						declaration_type_id: declarationTypeId
+						declaration_type_id: declarationTypeId,
+						accessToken: auth.accessToken
 					};
 
 					// save data with seding post request using axios.

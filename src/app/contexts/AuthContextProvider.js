@@ -31,7 +31,7 @@ export const AuthContextProvider = ({ children }) => {
 				accessToken: null
 			}));
 			removeAccessToken();
-			notificationCustom({ type: 'danger', mesage: fetchIsAuth.data?.mesage });
+			notificationCustom({ type: 'danger', mesage: dofetchIsAuth.data?.mesage });
 			return false;
 		}
 	};
